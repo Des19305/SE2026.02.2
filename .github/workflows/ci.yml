@@ -1,0 +1,13 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm starter repository
+        run: echo "No game source or tests are configured yet."
