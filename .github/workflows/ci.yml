@@ -1,3 +1,4 @@
+
 name: CI
 
 on:
@@ -6,8 +7,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  placeholder:
-    runs-on: ubuntu-latest
+  validate-project:
+    name: Validate Godot Project
+    runs-on: ubuntu-24.04
+
     steps:
-      - name: Confirm starter repository
-        run: echo "No game source or tests are configured yet."
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Godot
+        uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.2
+          use-dotnet: false
+
+      - name: Show Godot version
+        run: godot --version
+
+      - name: Import and validate project
+        run: godot --headless --editor --path . --quit
