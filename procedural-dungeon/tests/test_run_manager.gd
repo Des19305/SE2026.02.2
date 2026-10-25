@@ -96,6 +96,24 @@ func test_rejects_invalid_room_count_range() -> void:
 	_expect_rejected(manager.start_new_run(1, config), "Room count range is invalid")
 
 
+func test_rejects_fewer_than_two_rooms() -> void:
+	var config := CONFIG.duplicate()
+	config["min_rooms"] = 1
+	_expect_rejected(manager.start_new_run(1, config), "Room count range is invalid")
+
+
+func test_rejects_rooms_smaller_than_three_tiles() -> void:
+	var config := CONFIG.duplicate()
+	config["min_room_size"] = 2
+	_expect_rejected(manager.start_new_run(1, config), "Room size range is invalid")
+
+
+func test_accepts_smallest_supported_dungeon() -> void:
+	var config := {"width": 20, "height": 20, "min_rooms": 2, "max_rooms": 4, "min_room_size": 3, "max_room_size": 5}
+	var result: Dictionary = manager.start_new_run(1, config)
+	check(result["ok"], "20x20 should be accepted: %s" % result["error"])
+
+
 func test_rejects_invalid_room_size_range() -> void:
 	var config := CONFIG.duplicate()
 	config["min_room_size"] = 11
