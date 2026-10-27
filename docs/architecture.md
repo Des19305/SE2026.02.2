@@ -181,40 +181,40 @@ The generator should be implemented independently of Godot's visual scene system
 
 The following values are initial design targets and may be adjusted after implementation and testing.
 
-| Parameter | Initial Value |
+| Configuration key | Initial value |
 |---|---|
-| Dungeon size | 50 × 50 tiles |
-| Number of rooms | 8–12 |
-| Room dimensions | 5–10 tiles per dimension |
-| Corridor width | 1–2 tiles |
-| Starting area | One valid start room |
-| Boss area | One accessible boss room |
-| Generation retry limit | 10 attempts |
+| `width` | 50 tiles |
+| `height` | 50 tiles |
+| `min_rooms` | 8 |
+| `max_rooms` | 12 |
+| `min_room_size` | 5 tiles |
+| `max_room_size` | 10 tiles |
 
-A smaller dungeon, such as 30 × 30 tiles, may be used during early development and debugging.
+A 30 × 30 map may be used for early development and debugging. Room side lengths must stay within the configured minimum and maximum, and must not exceed the map dimensions.
 
-The retry limit is a provisional value. The implementation must use a clearly defined limit and report failure when that limit is reached.
+All configuration values must be positive integers. `min_rooms <= max_rooms` and `min_room_size <= max_room_size`.
+
+The retry limit is provisional. The implementation must use a clearly defined limit and report failure when it is reached. The initial corridor width of 1–2 tiles is a design target, but corridor width is not currently one of the agreed configuration keys.
 
 ### 5.3. Dungeon Validity Requirements
 
-A generated dungeon must satisfy the following requirements before it can be used by the game:
+A generated dungeon is valid only when all of the following conditions hold:
 
-- The dungeon grid matches the configured width and height.
-- All rooms and corridors remain within the dungeon boundaries.
-- Room dimensions satisfy the configured minimum and maximum constraints.
-- The dungeon contains a valid starting position and a valid boss position.
-- The starting position and boss position are on walkable tiles.
-- The boss is reachable from the starting position through walkable tiles.
-- The generated layout does not contain unintended disconnected walkable areas that violate the dungeon connectivity rules.
-- The generated layout is deterministic for the same seed, configuration, and generation implementation.
+- Configuration values for `width`, `height`, `min_rooms`, `max_rooms`, `min_room_size`, and `max_room_size` are positive integers.
+- `min_rooms <= max_rooms`, `min_room_size <= max_room_size`, and room dimensions do not exceed map dimensions.
+- The grid matches the configured width and height and contains only `0` (wall) or `1` (walkable) tiles.
+- The room count is within the configured limits. Rooms have valid in-bounds positions and sizes, and do not overlap; corridors may connect to rooms.
+- `start_cell` and `boss_cell` are distinct, in bounds, and on walkable tiles.
+- The boss is reachable from the start, and every walkable tile is reachable from `start_cell`.
+- Reachability uses four-direction movement: up, down, left, and right.
 
-The validator should return a clear success or failure result and provide error information when validation fails.
+A BFS or flood fill from `start_cell` may check boss reachability and connectivity of all walkable tiles. The validator returns `valid: bool` and `errors: Array` with specific validation errors.
 
 ### 5.4. Seed and Determinism
 
 The dungeon generator must use controlled, seed-based random number generation.
 
-Given the same seed, generation configuration, algorithm implementation, and relevant engine behavior, the generator must produce the same dungeon layout.
+Given the same seed, generation configuration, generator version, and compatible Godot environment, generation must produce identical `tiles`, `rooms`, `start_cell`, and `boss_cell`, with stable `rooms` ordering.
 
 The seed and configuration must be available for debugging and reproducibility. When a generation bug is reported, the team should record the seed, configuration, and relevant error details so the issue can be reproduced.
 
@@ -226,7 +226,7 @@ The generator must validate its output before the game uses it.
 
 If a generated dungeon is invalid, the generator may retry using the configured retry limit. Each attempt must follow the documented seed-handling strategy so that failures and results can be reproduced.
 
-If generation still fails after the retry limit is reached, the generator must return an explicit failure result with a meaningful error message. It must not silently return an invalid dungeon or allow gameplay to start with invalid data.
+If a valid configuration cannot produce a compliant dungeon within the retry limit, return an explicit failure; do not silently return invalid data or a dungeon with too few rooms, and do not start gameplay.
 
 The caller must check the generation result before initializing the dungeon scene or placing gameplay entities.
 
@@ -240,11 +240,11 @@ All random decisions that affect dungeon generation must use controlled, seed-ba
 
 The same seed, equivalent generation configuration, and same generation algorithm and rules must produce the same dungeon layout under the same relevant engine behavior.
 
-The generation configuration must include all parameters that affect dungeon generation, such as dungeon dimensions, room count, room dimensions, corridor settings, and other relevant generation parameters.
+The generation configuration must retain the complete effective configuration used for the run, including the agreed width, height, room-count, and room-size keys.
 
 ### 6.2. Replay
 
-For the MVP, replay means generating a new run with the same dungeon layout as the original run. It does not restore the previous gameplay state.
+For the MVP, replay means generating a new run with the original seed and complete effective generation configuration. It does not restore the previous gameplay state.
 
 The replay process consists of:
 
@@ -254,7 +254,7 @@ The replay process consists of:
 4. Generating and validating the dungeon.
 5. Starting a new run only if generation and validation succeed.
 
-The project must make the current run's seed available for inspection and debugging. The seed and generation configuration must be retained for as long as they are needed to support replay.
+The project must make the current run's seed available for inspection and debugging. The seed and complete effective generation configuration must be retained for as long as they are needed to support replay.
 
 Replay does not automatically restore the previous player's health, inventory, enemy states, or combat progress.
 
@@ -266,13 +266,13 @@ Changes to the algorithm, random-number generation, the order of random-number c
 
 For the MVP, reproducibility is guaranteed only when the seed, generation configuration, generation implementation, and relevant engine behavior are equivalent.
 
-If exact replay across different algorithm versions is required in the future, the project should record a generation version or equivalent compatibility identifier.
+Recording a `generator_version` is proposed for identifying algorithm changes, but is not yet a required field in the agreed contract.
 
 ### 6.4. Random Number Generation and Retry Behavior
 
 The generator must follow a consistent random-number generation strategy so that generation behavior can be reproduced during debugging and testing.
 
-For the MVP, the generator should initialize its controlled random-number generator from the supplied seed and use that generator consistently for all layout-affecting random decisions.
+For the MVP, the generator should initialize its controlled RNG from the supplied seed. Retries must use a documented deterministic RNG strategy and must not silently switch to an unrecorded random seed. The final retry limit and exact retry/RNG strategy remain unsettled.
 
 If generation fails and a retry is required, the retry process must follow the strategy defined in Section 5. The implementation must not introduce uncontrolled randomness between attempts.
 
@@ -282,7 +282,7 @@ A generation failure must be reported explicitly. The game must not start a run 
 
 The following tests should be included as the generator and replay functionality are implemented:
 
-- **Determinism test:** Generate a dungeon twice using the same seed and configuration, then verify that the resulting layouts are identical.
+- **Determinism test:** Generate twice with the same seed and configuration; compare `tiles`, `rooms`, `start_cell`, and `boss_cell`, with stable room ordering.
 - **Configuration test:** Verify that the generator respects the supplied configuration.
 - **Multiple-seed validity test:** Generate dungeons using multiple seeds and verify that they satisfy the dungeon validity requirements.
 - **Replay test:** Verify that replay uses the original seed and configuration and produces the same layout while starting a fresh run.
@@ -314,43 +314,21 @@ Any incompatible API change must be discussed with the team and documented befor
 
 `generate_dungeon(seed: int, config: Dictionary) -> Dictionary`
 
-Generates a dungeon using the supplied seed and configuration.
+Generates a dungeon using the supplied seed and configuration. Required positive-integer configuration keys are `width`, `height`, `min_rooms`, `max_rooms`, `min_room_size`, and `max_room_size`. Require `min_rooms <= max_rooms`, `min_room_size <= max_room_size`, and room dimensions no larger than the map.
 
-Required configuration keys:
+On success, the result dictionary contains `ok: bool`, `error: String`, `seed: int`, `width: int`, `height: int`, `tiles: Array`, `rooms: Array`, `start_cell: Vector2i`, and `boss_cell: Vector2i`. Each room entry contains `position: Vector2i` and `size: Vector2i`.
 
-- `width`: dungeon width in tiles.
-- `height`: dungeon height in tiles.
-- `min_rooms`: minimum number of rooms.
-- `max_rooms`: maximum number of rooms.
-- `min_room_size`: minimum room dimension in tiles.
-- `max_room_size`: maximum room dimension in tiles.
+The grid uses `0` for walls and `1` for walkable tiles. The origin `(0, 0)` is top-left; x increases right and y increases down. Access the grid as `tiles[y][x]`. Rooms must not overlap; corridors may connect to rooms.
 
-On success, the result dictionary contains:
-
-- `ok: bool`
-- `error: String`
-- `seed: int`
-- `width: int`
-- `height: int`
-- `tiles: Array`
-- `rooms: Array`
-- `start_cell: Vector2i`
-- `boss_cell: Vector2i`
-
-Each room entry contains `position: Vector2i` and `size: Vector2i`.
-
-The tile grid must use `0` for walls and `1` for walkable tiles. If generation fails, return `ok = false` with an explanatory error. Callers must not use the dungeon data as a valid layout when generation fails.
+On failure, return `ok = false` and a stable `error` code: `INVALID_CONFIG`, `GENERATION_FAILED`, or `INVALID_DUNGEON`. An `error_message` field may be added for a human-readable explanation. A valid configuration that cannot produce a compliant dungeon within the retry limit must fail, not silently return a map with too few rooms. Callers must not use failed dungeon data as a valid layout.
 
 `validate_dungeon(dungeon: Dictionary) -> Dictionary`
 
-Validates the generated layout and returns:
+Returns its separate validation result: `valid: bool` and `errors: Array` containing specific validation errors. Validation checks configuration constraints, grid dimensions and tile values, room count, bounds, size and overlap, distinct in-bounds walkable start and boss cells, boss reachability, and connectivity of every walkable tile from the start using four-direction movement. BFS or flood fill may be used.
 
-- `valid: bool`
-- `errors: Array`
+Runtime coordinates and sizes use `Vector2i`. When storing JSON, encode coordinates as dictionaries such as `{"x": 5, "y": 8}`. The save/load layer validates decoded values before converting them back to `Vector2i`; conversion is not the generator's responsibility.
 
-Validation must check grid dimensions, room and position bounds, valid start and boss positions, and reachability of the boss from the start through walkable tiles.
-
-**Determinism:** All layout-affecting random decisions must use controlled, seed-based random number generation. The same seed, configuration, generation implementation, and relevant engine behavior must produce the same layout.
+**Determinism:** With the same seed, configuration, generator version, and compatible Godot environment, results must have identical `tiles`, `rooms`, `start_cell`, and `boss_cell`. The order of entries in `rooms` must be stable.
 
 ### 7.3. Run Management API
 
@@ -366,7 +344,7 @@ Requests dungeon generation and validation. Returns a result containing `ok: boo
 
 `replay_last_run() -> Dictionary`
 
-Starts a fresh run using the previous run's seed and generation configuration. Replay regenerates the dungeon but does not restore previous health, inventory, enemy states, or combat progress.
+Starts a fresh run using the previous run's seed and complete effective generation configuration. Replay regenerates the dungeon but does not restore previous health, inventory, enemy states, or combat progress.
 
 `end_run(won: bool, reason: String) -> void`
 
@@ -498,17 +476,16 @@ Any change to a shared function signature, return structure, signal, or module r
 
 ## 8. Dungeon Validity and Testing Strategy
 
-A generated dungeon is considered valid when it satisfies the required structural and gameplay conditions.
+A generated dungeon is valid only when it satisfies the complete requirements in Sections 5.3 and 7.2.
 
 Initial validity requirements:
 
-- The dungeon dimensions match the generation configuration.
-- A valid starting position exists.
-- A valid boss position or boss room exists.
-- The player can reach the boss through traversable tiles.
-- Rooms and corridors remain within the map boundaries.
-- Walkable tiles and non-walkable tiles are represented consistently.
-- The same seed and generation configuration produce the same dungeon result.
+- Configuration values are positive integers, with `min_rooms <= max_rooms` and `min_room_size <= max_room_size`; room dimensions do not exceed map dimensions.
+- The grid dimensions match configuration and contain only `0` for walls and `1` for walkable tiles.
+- Room count is within the configured range; rooms are in bounds, within configured size limits, and non-overlapping.
+- `start_cell` and `boss_cell` are distinct, in bounds, and walkable.
+- The boss and every walkable tile are reachable from the start using four-direction movement.
+- The same seed, configuration, generator version, and compatible Godot environment produce identical `tiles`, `rooms`, `start_cell`, and `boss_cell`, with stable room ordering.
 
 ### 8.1 Unit Testing
 
@@ -540,17 +517,17 @@ The following performance targets are provisional and must be validated through 
 | Number of test seeds | 1,000 |
 | Average generation time | Below 100 ms |
 | P95 generation time | Below 200 ms |
-| Validity rate | 100% across the benchmark seed set |
+| Successful-output validation | 100% of successful outputs pass the validator |
 | Determinism | Identical layouts for repeated runs with the same seed and configuration |
 
 ### 9.1. Benchmark Methodology
 
-Benchmarking must measure dungeon generation separately from full game startup, scene initialization, and rendering.
+Benchmarking measures generation, validation, and retries, excluding full game startup, scene initialization, and rendering.
 
 For each test seed, the benchmark should:
 
 1. Use the same documented dungeon generation configuration.
-2. Measure the time required to generate and validate the dungeon.
+2. Measure generation, validation, and retry time; exclude rendering.
 3. Record whether generation succeeds and whether retries are required.
 4. Record the generated layout for determinism checks.
 
@@ -562,9 +539,9 @@ The same seed set and configuration should be used when comparing different impl
 
 Every generated dungeon in the benchmark seed set must satisfy the validity requirements defined in Section 5.
 
-The validity rate is calculated as the percentage of test seeds that produce valid dungeons within the configured retry limit. Any generation failure must be recorded and investigated.
+Report separately: 100% of successful outputs must pass validation, and the seed success rate is the percentage of tested seeds generating valid dungeons within the retry limit. Record failures; no minimum seed success-rate target is agreed.
 
-For determinism testing, repeated runs using the same seed and configuration must produce identical dungeon layouts under the same generation implementation and relevant engine behavior. Layout comparison should include the tile grid, room data, starting position, and boss position.
+For determinism testing, repeated runs with the same seed/configuration must produce identical `tiles`, `rooms`, `start_cell`, and `boss_cell` under the same generator version and compatible Godot environment. Room ordering must be stable.
 
 ### 9.3. Environment and Reporting
 
@@ -576,7 +553,7 @@ Each benchmark report must document:
 - Test seed set.
 - Number of measured generations.
 - Average and P95 generation times.
-- Number of invalid generations and failed attempts.
+- Number of successful outputs that pass validation, generation failures, and failed attempts.
 - Number of retries, where applicable.
 - Number of determinism failures.
 
