@@ -76,8 +76,8 @@ func _with_defaults(config: Dictionary) -> Dictionary:
 func _generate_valid_dungeon(seed: int, run_config: Dictionary) -> Dictionary:
 	var dungeon := DungeonGenerator.generate_dungeon(seed, run_config)
 	if not dungeon["ok"]:
-		return {"dungeon": {}, "error": "Generation failed: %s" % dungeon["error"]}
-	var check := DungeonGenerator.validate_dungeon(dungeon)
+		return {"dungeon": {}, "error": "Generation failed: %s" % dungeon["error_message"]}
+	var check := DungeonGenerator.validate_dungeon(dungeon, run_config)
 	if not check["valid"]:
 		return {"dungeon": {}, "error": "Generated dungeon is invalid: %s" % ", ".join(check["errors"])}
 	return {"dungeon": dungeon, "error": ""}
