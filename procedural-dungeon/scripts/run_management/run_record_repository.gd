@@ -9,6 +9,7 @@ const LAST_RUN_FILE := "last_run.json"
 const TRANSIENT_ERRORS := [ERR_BUSY, ERR_FILE_ALREADY_IN_USE, ERR_FILE_CANT_OPEN, ERR_FILE_CANT_WRITE, ERR_LOCKED, ERR_TIMEOUT]
 ## Wait before each retry. Its size is the number of retries (4 attempts in total).
 const RETRY_DELAYS_MS := [50, 100, 200]
+const TEMP_SUFFIX := ".tmp"
 
 var records_dir: String
 ## (path: String, text: String) -> int (Error). Replaceable in tests to simulate storage faults.
@@ -66,15 +67,25 @@ static func is_transient(err: int) -> bool:
 func _write(file_name: String, record: Dictionary) -> String:
 	var path := records_dir.path_join(file_name)
 	var text := JSON.stringify(record, "\t")
-	var err: int = write_file.call(path, text)
+	var err := _write_replace(path, text)
 	var retries := 0
 	while err != OK and is_transient(err) and retries < RETRY_DELAYS_MS.size():
 		sleep.call(RETRY_DELAYS_MS[retries])
 		retries += 1
-		err = write_file.call(path, text)
+		err = _write_replace(path, text)
 	if err != OK:
+		_remove(file_name + TEMP_SUFFIX)
 		return "Cannot save run record: %s" % error_string(err)
 	return ""
+
+
+## One attempt: write a temporary file, then rename it over the real one, so a
+## half-written attempt never replaces a complete record.
+func _write_replace(path: String, text: String) -> int:
+	var err: int = write_file.call(path + TEMP_SUFFIX, text)
+	if err != OK:
+		return err
+	return DirAccess.rename_absolute(path + TEMP_SUFFIX, path)
 
 
 func _remove(file_name: String) -> void:

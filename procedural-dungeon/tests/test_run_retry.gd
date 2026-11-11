@@ -27,7 +27,7 @@ class ScriptedStorage:
 	var calls: Array[String] = []
 
 	func write(path: String, text: String) -> int:
-		var key := "last_run" if path.get_file() == "last_run.json" else "record"
+		var key := "last_run" if path.get_file().trim_suffix(".tmp") == "last_run.json" else "record"
 		calls.append(key)
 		var queue: Array = outcomes[key]
 		var outcome: int = queue.pop_front() if not queue.is_empty() else OK
@@ -194,6 +194,19 @@ func test_end_can_be_repeated_after_storage_recovers() -> void:
 	check(result.get("ok", false), "second end should succeed: %s" % result.get("error", ""))
 	check_eq(_read(records_dir.path_join("%d_42.json" % NOW)).get("status", ""), "completed", "stored status")
 	check_eq(ended_events, [[false, "player died"]], "run_ended emitted once")
+
+
+## TC-15 S1 --end / partial writes until retries run out--> S1. Found in
+## review: each failed attempt may leave a half-written file, so the stored
+## record must still be the complete in_progress record afterwards.
+func test_failed_end_does_not_corrupt_stored_record() -> void:
+	manager.start_new_run(42, CONFIG)
+	storage.outcomes["record"] = [PARTIAL, PARTIAL, PARTIAL, PARTIAL]
+	var result := _end(false, "player died")
+	check(not result.get("ok", true), "end must report the storage failure")
+	var saved := _read(records_dir.path_join("%d_42.json" % NOW))
+	check_eq(saved.get("status", ""), "in_progress", "stored record after failed end")
+	check_eq(int(saved.get("seed", -1)), 42, "stored seed after failed end")
 
 
 ## TC-12 S0 --end--> S0. Invalid transition: no write, no signal.
