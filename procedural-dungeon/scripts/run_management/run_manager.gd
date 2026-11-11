@@ -57,15 +57,24 @@ func replay_last_run() -> Dictionary:
 	return start_new_run(last_run["seed"], last_run["config"])
 
 
-func end_run(won: bool, reason: String) -> void:
+## Marks the current run as completed. The run is only cleared and run_ended
+## only emitted after the completed record is saved; on a storage failure the
+## run stays in progress and end_run can be called again.
+## Returns {"ok": bool, "error": String}.
+func end_run(won: bool, reason: String) -> Dictionary:
 	if current_run.is_empty():
-		return
-	current_run["status"] = "completed"
-	current_run["won"] = won
-	current_run["reason"] = reason
-	_repository().update(current_run)
+		return {"ok": false, "error": "No run in progress"}
+	var finished := current_run.duplicate(true)
+	finished["status"] = "completed"
+	finished["won"] = won
+	finished["reason"] = reason
+	var save_error := _repository().update(finished)
+	if save_error != "":
+		return {"ok": false, "error": save_error}
 	current_run = {}
+	last_run = finished
 	run_ended.emit(won, reason)
+	return {"ok": true, "error": ""}
 
 
 func _with_defaults(config: Dictionary) -> Dictionary:
