@@ -9,7 +9,9 @@ This document explains what the generator does today, how other modules should c
 | File | Purpose |
 |---|---|
 | `procedural-dungeon/scripts/generation/dungeon_generator.gd` | Generator and validator. Pure data, no nodes or scenes. |
+| `procedural-dungeon/scripts/generation/seed_utils.gd` | Creating a new seed, reading a seed typed by a player, seed text for the HUD and for bug reports. |
 | `procedural-dungeon/tests/test_dungeon_generator.gd` | Generator and validator tests. |
+| `procedural-dungeon/tests/test_seed_utils.gd` | Seed utility tests. |
 | `procedural-dungeon/tests/run_tests.gd` | Headless test runner (shared with the Run Management tests). |
 | `procedural-dungeon/tests/test_case.gd` | `check()`, `check_eq()` and `expect_error()` helpers used by the tests. |
 
@@ -83,6 +85,34 @@ The optional `config` parameter is an addition to the §7.2 signature. Existing 
 - Attempt `k` (0-based) seeds its RNG with `seed + k * ATTEMPT_SEED_STRIDE`, where `ATTEMPT_SEED_STRIDE = 1_000_003`. Any attempt can therefore be reproduced from the run seed alone, and no unrecorded seed is ever used. This is the strategy `architecture.md` §6.4 still lists as unsettled; it should be copied there once the team agrees.
 - The same seed, config and `GENERATOR_VERSION` give the same `tiles`, `rooms` (same order), `start_cell` and `boss_cell`.
 
+### Creating and reading seeds (`seed_utils.gd`)
+
+A seed is an `int` from `0` to `SeedUtils.MAX_SEED` (2 147 483 647, at most 10 digits), so it can be shown on the HUD, typed back by a player, and pasted into a bug report.
+
+| Function | Use |
+|---|---|
+| `new_seed(rng = null) -> int` | New random seed when the player starts a game without choosing one. This is the only place where unseeded randomness is allowed: the seed is picked before generation and then stored with the run. Pass a seeded `RandomNumberGenerator` to get a repeatable sequence in tests. |
+| `parse_seed(text) -> {ok, seed, error}` | Reads a seed typed by the player. Ignores surrounding spaces and leading zeros. Rejects empty text (`Seed is empty`), any character other than `0-9`, including `-` and `+` (`Seed must contain only digits 0-9`), and values above `MAX_SEED` (`Seed must be at most 2147483647`). Never crashes on very long input. |
+| `is_valid_seed(seed) -> bool` | `0 <= seed <= MAX_SEED`. |
+| `format_seed(seed) -> String` | Text for the HUD and end screen; `parse_seed()` reads it back. |
+| `seed_report(seed, config) -> String` | One line for logs and seed-based bug issues (AC-SEED-03), for example `seed=12345 generator_version=1 config={height=50, max_room_size=10, ...}`. Config keys are sorted. |
+
+Typical start of a new game (Run Management / UI):
+
+```gdscript
+const SeedUtils := preload("res://scripts/generation/seed_utils.gd")
+
+var seed_value := SeedUtils.new_seed()            # player did not choose a seed
+# or: var parsed := SeedUtils.parse_seed(seed_input.text)
+#     if not parsed["ok"]: show parsed["error"]; return
+#     seed_value = parsed["seed"]
+var result := run_manager.start_new_run(seed_value, config)
+hud_seed_label.text = "Seed: " + SeedUtils.format_seed(seed_value)
+print(SeedUtils.seed_report(seed_value, config))  # for bug reports
+```
+
+`RunConfigValidator` still only rejects negative seeds. Rejecting seeds above `MAX_SEED` there too is a small change for the Run Management owner.
+
 ## 4. `GENERATOR_VERSION` — when to change it
 
 `GENERATOR_VERSION` (currently `1`) identifies the algorithm. Increase it whenever a change can give a different layout for an existing seed and config. Examples: changing the BSP split rule, the room placement, the corridor shape, or the number or order of RNG calls.
@@ -125,7 +155,7 @@ From the repository root:
 godot --headless --path procedural-dungeon -s res://tests/run_tests.gd
 ```
 
-At `e6bf4d7`: 39 tests, 39 passed (19 generator tests, 20 Run Management tests). The runner exits with code `1` if any test fails or if the engine reports a script error during a test. A test that deliberately triggers an engine error must call `expect_error("<part of the message>")` first.
+At `e6bf4d7`: 39 tests, 39 passed (19 generator tests, 20 Run Management tests). With the seed utility: 51 tests, 51 passed (12 more in `test_seed_utils.gd`). The runner exits with code `1` if any test fails or if the engine reports a script error during a test. A test that deliberately triggers an engine error must call `expect_error("<part of the message>")` first.
 
 The checks were confirmed to catch real faults: disabling `check_config()` or the overlap check makes three tests fail.
 
@@ -142,4 +172,5 @@ CI does not run these tests yet. `ci.yml` validates the empty `project.godot` in
 | Commit a benchmark script (1000 seeds, average/p95, failures, retries) | Issue for AC-ENG-03 |
 | Make CI run `tests/run_tests.gd` on `procedural-dungeon/` | CI owner |
 | Merge `tests/run_tests.gd` with the runner in PR #7 | Agreement with Duy (both PRs add this file) |
+| Use `SeedUtils` when a game starts (random seed or typed seed) and show `format_seed()` on the HUD | Kiên (Run Management, HUD) |
 | Run record retention is 70 days in `run_manager.gd`; review on PR #6 asks for 35 | Kiên / Long (Run Management) |

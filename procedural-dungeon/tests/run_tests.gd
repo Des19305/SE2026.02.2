@@ -8,6 +8,7 @@ extends SceneTree
 const TEST_SCRIPTS := [
 	"res://tests/test_dungeon_generator.gd",
 	"res://tests/test_run_manager.gd",
+	"res://tests/test_seed_utils.gd",
 ]
 
 
