@@ -27,7 +27,7 @@ class ScriptedStorage:
 	var calls: Array[String] = []
 
 	func write(path: String, text: String) -> int:
-		var key := "last_run" if path.get_file().trim_suffix(".tmp") == "last_run.json" else "record"
+		var key := "last_run" if path.get_file().begins_with("last_run.json") else "record"
 		calls.append(key)
 		var queue: Array = outcomes[key]
 		var outcome: int = queue.pop_front() if not queue.is_empty() else OK

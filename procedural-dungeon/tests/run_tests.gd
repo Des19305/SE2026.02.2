@@ -4,6 +4,8 @@ extends SceneTree
 ##
 ## Usage (from the procedural-dungeon/ folder):
 ##   godot --headless --path . -s res://tests/run_tests.gd
+## Set TEST_SHUFFLE_SEED=<int> to run the tests of each file in a shuffled
+## order (used to look for order-dependent tests).
 
 const TEST_SCRIPTS := [
 	"res://tests/test_dungeon_generator.gd",
@@ -29,6 +31,9 @@ func _init() -> void:
 	OS.add_logger(collector)
 	var total := 0
 	var failed := 0
+	var shuffle_seed := OS.get_environment("TEST_SHUFFLE_SEED")
+	if shuffle_seed != "":
+		print("Shuffled test order, TEST_SHUFFLE_SEED=%s" % shuffle_seed)
 	for path in TEST_SCRIPTS:
 		collector.errors.clear()
 		var script: GDScript = load(path)
@@ -37,10 +42,19 @@ func _init() -> void:
 			failed += 1
 			print("FAIL %s (cannot load script)" % path.get_file())
 			continue
+		var test_names: Array[String] = []
 		for method in script.get_script_method_list():
-			var test_name: String = method["name"]
-			if not test_name.begins_with("test_"):
-				continue
+			if method["name"].begins_with("test_"):
+				test_names.append(method["name"])
+		if shuffle_seed != "":
+			var rng := RandomNumberGenerator.new()
+			rng.seed = int(shuffle_seed)
+			for i in range(test_names.size() - 1, 0, -1):
+				var j := rng.randi_range(0, i)
+				var swap := test_names[i]
+				test_names[i] = test_names[j]
+				test_names[j] = swap
+		for test_name in test_names:
 			total += 1
 			collector.errors.clear()
 			var suite = script.new()
