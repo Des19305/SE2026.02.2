@@ -19,6 +19,9 @@ const GENERATION_VERSION := 1
 var records_dir := "user://runs"
 ## Returns the current Unix time in seconds; replaceable in tests.
 var clock: Callable = func() -> int: return int(Time.get_unix_time_from_system())
+## Optional storage writer and sleep passed to the repository; replaceable in tests.
+var storage_writer: Callable
+var retry_sleep: Callable
 var current_run := {}
 var last_run := {}
 
@@ -98,7 +101,12 @@ func _new_record(seed: int, run_config: Dictionary, now: int) -> Dictionary:
 
 
 func _repository() -> RunRecordRepository:
-	return RunRecordRepository.new(records_dir)
+	var repository := RunRecordRepository.new(records_dir)
+	if storage_writer.is_valid():
+		repository.write_file = storage_writer
+	if retry_sleep.is_valid():
+		repository.sleep = retry_sleep
+	return repository
 
 
 func _rejected(seed: int, error: String) -> Dictionary:

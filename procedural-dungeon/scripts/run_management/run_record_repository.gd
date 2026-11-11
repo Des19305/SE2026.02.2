@@ -6,10 +6,15 @@ extends RefCounted
 const LAST_RUN_FILE := "last_run.json"
 
 var records_dir: String
+## (path: String, text: String) -> int (Error). Replaceable in tests to simulate storage faults.
+var write_file: Callable
+## (msec: int) -> void. Replaceable in tests so they never wait.
+var sleep: Callable = func(msec: int) -> void: OS.delay_msec(msec)
 
 
 func _init(dir: String) -> void:
 	records_dir = dir
+	write_file = _write_to_disk
 
 
 ## Prunes expired records, then writes the new record and last_run.json.
@@ -25,9 +30,9 @@ func save_new_run(record: Dictionary) -> String:
 	return _write(LAST_RUN_FILE, record)
 
 
-## Overwrites an existing run record. Best-effort: a failed write is ignored.
-func update(record: Dictionary) -> void:
-	_write(record["run_id"] + ".json", record)
+## Overwrites an existing run record. Returns an empty string on success.
+func update(record: Dictionary) -> String:
+	return _write(record["run_id"] + ".json", record)
 
 
 func prune_expired(now: int) -> void:
@@ -43,9 +48,17 @@ func prune_expired(now: int) -> void:
 
 
 func _write(file_name: String, record: Dictionary) -> String:
-	var file := FileAccess.open(records_dir.path_join(file_name), FileAccess.WRITE)
-	if file == null:
-		return "Cannot save run record: %s" % error_string(FileAccess.get_open_error())
-	file.store_string(JSON.stringify(record, "\t"))
-	file.close()
+	var err: int = write_file.call(records_dir.path_join(file_name), JSON.stringify(record, "\t"))
+	if err != OK:
+		return "Cannot save run record: %s" % error_string(err)
 	return ""
+
+
+func _write_to_disk(path: String, text: String) -> int:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return FileAccess.get_open_error()
+	file.store_string(text)
+	var err := file.get_error()
+	file.close()
+	return err
