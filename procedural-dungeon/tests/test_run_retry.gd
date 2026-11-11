@@ -209,6 +209,21 @@ func test_failed_end_does_not_corrupt_stored_record() -> void:
 	check_eq(int(saved.get("seed", -1)), 42, "stored seed after failed end")
 
 
+## TC-16 S0 --start / temp file written but rename fails--> S0. A failed
+## rename counts as busy: retried with the same backoff, then the start fails
+## cleanly and no temporary file is left. (A folder with the record's name
+## makes the rename fail every time.)
+func test_failed_rename_is_retried_then_cleaned_up() -> void:
+	DirAccess.make_dir_recursive_absolute(records_dir.path_join("%d_42.json" % NOW))
+	var result: Dictionary = manager.start_new_run(42, CONFIG)
+	check(not result["ok"], "start must fail when the record cannot be renamed into place")
+	check_eq(waits, [50, 100, 200], "backoff")
+	check_eq(storage.calls.size(), 4, "attempts")
+	check(_record_files().all(func(name): return not name.ends_with(".tmp")), "temporary file left: %s" % [_record_files()])
+	check(manager.current_run.is_empty(), "current_run must stay empty")
+	check_eq(started_events, [], "run_started")
+
+
 ## TC-12 S0 --end--> S0. Invalid transition: no write, no signal.
 func test_end_without_run_is_rejected() -> void:
 	var result := _end(true, "nothing")
