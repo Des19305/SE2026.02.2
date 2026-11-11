@@ -91,8 +91,58 @@ Events: `start`, `end`, `replay`, each combined with a storage outcome: `ok`, `t
 | S0 | end | S0 | `ok = false`, no write, no signal |
 | S0 (after a failed start) | replay | S1 | replays the previous successful run |
 
-The test cases built from this table are in `tests/test_run_retry.gd` (`TC-xx` in each test name's comment).
+Two rows were added after the first implementation, from review and from mutation testing:
 
-## 4. How to run
+| From | Event / storage outcome | To | Expected side effects |
+|---|---|---|---|
+| S1 | end / every attempt leaves a half-written file | S1 | stored record is still the complete `in_progress` record (TC-15) |
+| S0 | start / temp file written, rename fails every time | S0 | retried with the same backoff, then fails, no temp file left (TC-16) |
+
+## 4. Traceability and results
+
+All tests are in `procedural-dungeon/tests/test_run_retry.gd` unless noted. Results at commit `2864ca1`: 55 tests, 55 passed.
+
+| AC / risk | Test cases | Commits | Result |
+|---|---|---|---|
+| AC-1 retry transient errors | TC-02, TC-03, TC-09, TC-14, TC-16 | `45e977a`, `e603340` | pass |
+| AC-2 no repeated side effects | TC-02, TC-03, TC-09, TC-11; load check (signals counted per task) | `45e977a` | pass |
+| AC-3 permanent errors not retried | TC-05, TC-14 | `45e977a` | pass |
+| AC-4 start is all or nothing | TC-04, TC-06, TC-13, TC-16 | `45e977a` | pass |
+| AC-5 end is all or nothing | TC-10, TC-11, TC-12, TC-15 | `45e977a`, `8f3ab28` | pass |
+| Risk: partial failure leaves inconsistent data | TC-06, TC-07, TC-10, TC-15; load check (disk vs memory per task) | `45e977a`, `8f3ab28`, `e603340` | pass |
+| NFR-1 p95 ≤ 3.0 s, 100 concurrent tasks | `tests/load_test_vt108.gd` | `f5d7856` | p95 0.43–0.46 s at 30% faults (3 runs) |
+| NFR-4 no regression | 39 existing tests in `test_dungeon_generator.gd`, `test_run_manager.gd` | all | pass |
+
+Mutation testing (on throw-away branches, not merged):
+
+| Branch | Mutation | Result |
+|---|---|---|
+| `mutation/vt108-transient-inverted` | `is_transient()` returns the opposite | killed, 10 tests fail |
+| `mutation/vt108-end-inverted` | `end_run` treats a failed save as success and the reverse | killed, 7 tests fail |
+| `mutation/vt108-rename-not-busy` | a failed rename is not treated as busy | survived the 54 tests, killed after TC-16 was added |
+
+Load check, one records folder per task (as in the game), Windows 11, 12 CPU threads, 3 runs:
+
+| Fault rate | Runs started / ended | p95 task time | Disk/memory problems |
+|---|---|---|---|
+| 0% | 100/100, 100/100 | 307–314 ms | 0 |
+| 30% | 100/100, 100/100 | 429–460 ms | 0 |
+| 50% | 86/100, 81/100 | 696–743 ms | 0 |
+
+At 50% a write fails all 4 attempts with probability 0.5^4 ≈ 6%, so some runs are expected to fail. They fail cleanly: no record left for a failed start, record still `in_progress` for a failed end.
+
+Stress case, one shared folder (`SHARED_DIR=1`): at 0% injected faults, 94/100 runs start, because 100 writers replace the same `last_run.json` and some renames still fail after 4 attempts. p95 stays below 1.2 s and no consistency problem is found. Writing `last_run.json` directly (commit `45e977a`) gave 100/100 in this case but can leave a half-written file (TC-15). This trade-off is kept as an open item.
+
+## 5. Known limitations and open items
+
+- `run_id` is `<unix seconds>_<seed>`. A replay of the same seed in the same second gets the same `run_id` and overwrites the completed record of the previous run; if that replay then fails to save, the rollback deletes the file. This existed before VT-108. Needs a unique `run_id` (Run Management owner).
+- `end_run` now returns `{ok, error}` instead of `void`. This changes `architecture.md` §7.3 and needs team agreement (§7.7).
+- Retry waits use `OS.delay_msec` and block the calling thread for at most 350 ms per write. Fine for the current synchronous API; a later async version could use timers.
+- No jitter in the backoff; it would help the shared-folder stress case.
+- `last_run.json` is written but not read yet (restoring `last_run` after a restart is still open from the PR #6 review).
+- No line coverage tool for GDScript in this setup; coverage is checked per branch in the report.
+- CI does not run the tests yet (`ci.yml` validates the root `project.godot`).
+
+## 6. How to run
 
 See the "Running the tests" section of the repository `README.md`.
