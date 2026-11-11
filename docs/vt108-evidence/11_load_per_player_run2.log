@@ -1,0 +1,22 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+VT-108 load check: 100 concurrent tasks per scenario, one records folder per task, Godot 4.7.2-stable (official), Windows, 12 CPU threads
+
+fault rate 0%: 300 writes, 0 injected faults
+  runs started 100/100, ended 100/100
+  task time ms: avg 275, p50 292, p95 307, max 308 (target p95 <= 3000)
+  consistency problems: 0
+  PASS
+
+fault rate 30%: 430 writes, 130 injected faults
+  runs started 100/100, ended 100/100
+  task time ms: avg 307, p50 277, p95 442, max 575 (target p95 <= 3000)
+  consistency problems: 0
+  PASS
+
+fault rate 50%: 532 writes, 272 injected faults
+  runs started 86/100, ended 81/100
+  task time ms: avg 429, p50 388, p95 743, max 1157 (target p95 <= 3000)
+  error x19: Cannot save run record: Busy
+  consistency problems: 0
+  PASS

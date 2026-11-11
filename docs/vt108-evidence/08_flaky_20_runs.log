@@ -1,0 +1,32 @@
+--- code at 8f3ab28 + TEST_SHUFFLE_SEED option, 54 tests ---
+run 1 (fixed order): 54 tests, 54 passed, 0 failed
+run 2 (fixed order): 54 tests, 54 passed, 0 failed
+run 3 (fixed order): 54 tests, 54 passed, 0 failed
+run 4 (fixed order): 54 tests, 54 passed, 0 failed
+run 5 (fixed order): 54 tests, 54 passed, 0 failed
+run 6 (fixed order): 54 tests, 54 passed, 0 failed
+run 7 (fixed order): 54 tests, 54 passed, 0 failed
+run 8 (fixed order): 54 tests, 54 passed, 0 failed
+run 9 (fixed order): 54 tests, 54 passed, 0 failed
+run 10 (fixed order): 54 tests, 54 passed, 0 failed
+run 11 (TEST_SHUFFLE_SEED=11): 54 tests, 54 passed, 0 failed
+run 12 (TEST_SHUFFLE_SEED=12): 54 tests, 54 passed, 0 failed
+run 13 (TEST_SHUFFLE_SEED=13): 54 tests, 54 passed, 0 failed
+run 14 (TEST_SHUFFLE_SEED=14): 54 tests, 54 passed, 0 failed
+run 15 (TEST_SHUFFLE_SEED=15): 54 tests, 54 passed, 0 failed
+run 16 (TEST_SHUFFLE_SEED=16): 54 tests, 54 passed, 0 failed
+run 17 (TEST_SHUFFLE_SEED=17): 54 tests, 54 passed, 0 failed
+run 18 (TEST_SHUFFLE_SEED=18): 54 tests, 54 passed, 0 failed
+run 19 (TEST_SHUFFLE_SEED=19): 54 tests, 54 passed, 0 failed
+run 20 (TEST_SHUFFLE_SEED=20): 54 tests, 54 passed, 0 failed
+--- after TC-16 (commit 2864ca1, 55 tests) ---
+run 21 (fixed order): 55 tests, 55 passed, 0 failed
+run 22 (fixed order): 55 tests, 55 passed, 0 failed
+run 23 (fixed order): 55 tests, 55 passed, 0 failed
+run 24 (fixed order): 55 tests, 55 passed, 0 failed
+run 25 (fixed order): 55 tests, 55 passed, 0 failed
+run 26 (TEST_SHUFFLE_SEED=26): 55 tests, 55 passed, 0 failed
+run 27 (TEST_SHUFFLE_SEED=27): 55 tests, 55 passed, 0 failed
+run 28 (TEST_SHUFFLE_SEED=28): 55 tests, 55 passed, 0 failed
+run 29 (TEST_SHUFFLE_SEED=29): 55 tests, 55 passed, 0 failed
+run 30 (TEST_SHUFFLE_SEED=30): 55 tests, 55 passed, 0 failed

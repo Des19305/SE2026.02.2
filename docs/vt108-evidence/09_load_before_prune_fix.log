@@ -1,0 +1,36 @@
+# Trimmed copy. The full run printed 911 'Parse JSON failed' errors from prune_expired
+# (concurrent writers, fixed in e603340). First error block and the summary are kept.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+VT-108 load check: 100 concurrent tasks per scenario, Godot 4.7.2-stable (official), Windows, 12 CPU threads
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:56)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:34)
+       [2] start_new_run (res://scripts/run_management/run_manager.gd:42)
+       [3] _task (res://tests/load_test_vt108.gd:141)
+...
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+VT-108 load check: 100 concurrent tasks per scenario, Godot 4.7.2-stable (official), Windows, 12 CPU threads
+
+fault rate 0%: 268 writes, 0 injected faults
+  runs started 52/100, ended 52/100
+  task time ms: avg 616, p50 442, p95 1563, max 1602 (target p95 <= 3000)
+  consistency problems: 0
+  PASS
+
+fault rate 30%: 394 writes, 115 injected faults
+  runs started 69/100, ended 69/100
+  task time ms: avg 534, p50 404, p95 998, max 1090 (target p95 <= 3000)
+  consistency problems: 0
+  PASS
+
+fault rate 50%: 491 writes, 248 injected faults
+  runs started 55/100, ended 52/100
+  task time ms: avg 501, p50 438, p95 918, max 1206 (target p95 <= 3000)
+  consistency problems: 0
+  PASS

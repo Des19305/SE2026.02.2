@@ -1,0 +1,67 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS test_dungeon_generator.gd::test_same_seed_and_config_produce_identical_layout
+PASS test_dungeon_generator.gd::test_result_respects_config
+PASS test_dungeon_generator.gd::test_many_seeds_produce_valid_dungeons
+PASS test_dungeon_generator.gd::test_impossible_config_returns_explicit_failure
+PASS test_dungeon_generator.gd::test_validator_rejects_unreachable_boss
+PASS test_dungeon_generator.gd::test_validator_rejects_wrong_grid_size
+PASS test_dungeon_generator.gd::test_result_carries_generator_version
+PASS test_dungeon_generator.gd::test_known_seed_layout_is_unchanged
+PASS test_dungeon_generator.gd::test_small_debug_config_produces_valid_dungeons
+PASS test_dungeon_generator.gd::test_invalid_configs_are_rejected_without_crashing
+PASS test_dungeon_generator.gd::test_failure_result_keeps_contract_keys
+PASS test_dungeon_generator.gd::test_validator_accepts_generated_dungeon_with_config
+PASS test_dungeon_generator.gd::test_validator_rejects_tile_values_other_than_0_and_1
+PASS test_dungeon_generator.gd::test_validator_rejects_overlapping_rooms
+PASS test_dungeon_generator.gd::test_validator_checks_room_count_against_config
+PASS test_dungeon_generator.gd::test_validator_checks_room_size_against_config
+PASS test_dungeon_generator.gd::test_validator_rejects_disconnected_walkable_tile
+PASS test_dungeon_generator.gd::test_validator_rejects_start_equal_to_boss
+PASS test_dungeon_generator.gd::test_validator_survives_malformed_input
+PASS test_run_manager.gd::test_start_returns_valid_dungeon_and_emits_signal
+PASS test_run_manager.gd::test_start_writes_run_record_with_70_day_retention
+PASS test_run_manager.gd::test_caller_config_is_not_mutated
+PASS test_run_manager.gd::test_rejects_negative_seed
+PASS test_run_manager.gd::test_rejects_missing_config_key
+PASS test_run_manager.gd::test_rejects_non_integer_config_value
+PASS test_run_manager.gd::test_rejects_out_of_range_size
+PASS test_run_manager.gd::test_rejects_invalid_room_count_range
+PASS test_run_manager.gd::test_rejects_fewer_than_two_rooms
+PASS test_run_manager.gd::test_rejects_rooms_smaller_than_three_tiles
+PASS test_run_manager.gd::test_accepts_smallest_supported_dungeon
+PASS test_run_manager.gd::test_rejects_invalid_room_size_range
+PASS test_run_manager.gd::test_rejects_rooms_that_do_not_fit
+PASS test_run_manager.gd::test_rejects_start_while_run_in_progress
+PASS test_run_manager.gd::test_generation_failure_starts_no_run
+PASS test_run_manager.gd::test_replay_regenerates_identical_layout
+PASS test_run_manager.gd::test_replay_without_previous_run_fails
+PASS test_run_manager.gd::test_end_run_updates_record_and_emits_signal
+PASS test_run_manager.gd::test_expired_records_are_pruned_and_fresh_ones_kept
+ERROR: Could not create directory: 'user://test_runs/blocker/runs'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] save_new_run (res://scripts/run_management/run_record_repository.gd:30)
+       [1] start_new_run (res://scripts/run_management/run_manager.gd:42)
+       [2] test_storage_failure_blocks_run_start (res://tests/test_run_manager.gd:200)
+       [3] _init (res://tests/run_tests.gd:48)
+PASS test_run_manager.gd::test_storage_failure_blocks_run_start
+PASS test_run_retry.gd::test_start_without_faults_writes_once
+PASS test_run_retry.gd::test_start_retries_transient_record_error_without_duplicates
+PASS test_run_retry.gd::test_start_succeeds_on_last_allowed_retry
+PASS test_run_retry.gd::test_start_fails_cleanly_when_retries_are_exhausted
+PASS test_run_retry.gd::test_start_does_not_retry_permanent_error
+PASS test_run_retry.gd::test_partial_start_failure_rolls_back_record
+PASS test_run_retry.gd::test_retry_replaces_partially_written_record
+PASS test_run_retry.gd::test_start_while_in_progress_writes_nothing
+PASS test_run_retry.gd::test_end_retries_transient_error_and_emits_once
+PASS test_run_retry.gd::test_failed_end_keeps_run_in_progress
+PASS test_run_retry.gd::test_end_can_be_repeated_after_storage_recovers
+FAIL test_run_retry.gd::test_failed_end_does_not_corrupt_stored_record
+    - stored record after failed end: expected <in_progress>, got <>
+    - stored seed after failed end: expected <42>, got <-1>
+PASS test_run_retry.gd::test_end_without_run_is_rejected
+PASS test_run_retry.gd::test_replay_after_failed_start_uses_previous_run
+PASS test_run_retry.gd::test_error_classification
+
+54 tests, 53 passed, 1 failed
