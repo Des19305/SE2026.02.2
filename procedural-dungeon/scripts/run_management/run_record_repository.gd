@@ -53,7 +53,11 @@ func prune_expired(now: int) -> void:
 	for file_name in dir.get_files():
 		if not file_name.ends_with(".json") or file_name == LAST_RUN_FILE:
 			continue
-		var old: Variant = JSON.parse_string(FileAccess.get_file_as_string(records_dir.path_join(file_name)))
+		# A file another writer is replacing right now may read as empty: skip it.
+		var json := JSON.new()
+		if json.parse(FileAccess.get_file_as_string(records_dir.path_join(file_name))) != OK:
+			continue
+		var old: Variant = json.data
 		if old is Dictionary and int(old.get("expires_at", 0)) <= now:
 			dir.remove(file_name)
 
@@ -74,7 +78,7 @@ func _write(file_name: String, record: Dictionary) -> String:
 		retries += 1
 		err = _write_replace(path, text)
 	if err != OK:
-		_remove(file_name + TEMP_SUFFIX)
+		_remove_path(_temp_path(path))
 		return "Cannot save run record: %s" % error_string(err)
 	return ""
 
@@ -82,14 +86,29 @@ func _write(file_name: String, record: Dictionary) -> String:
 ## One attempt: write a temporary file, then rename it over the real one, so a
 ## half-written attempt never replaces a complete record.
 func _write_replace(path: String, text: String) -> int:
-	var err: int = write_file.call(path + TEMP_SUFFIX, text)
+	var temp_path := _temp_path(path)
+	var err: int = write_file.call(temp_path, text)
 	if err != OK:
 		return err
-	return DirAccess.rename_absolute(path + TEMP_SUFFIX, path)
+	# On Windows, rename reports a generic FAILED when another writer is
+	# replacing the same file at that moment. Treat it as busy so it is retried
+	# (bounded by RETRY_DELAYS_MS) instead of failing the run at once.
+	if DirAccess.rename_absolute(temp_path, path) != OK:
+		return ERR_BUSY
+	return OK
+
+
+## The temporary name is unique per repository object, so two writers of the
+## same file (last_run.json) never share a temporary file.
+func _temp_path(path: String) -> String:
+	return "%s.%d%s" % [path, get_instance_id(), TEMP_SUFFIX]
 
 
 func _remove(file_name: String) -> void:
-	var path := records_dir.path_join(file_name)
+	_remove_path(records_dir.path_join(file_name))
+
+
+func _remove_path(path: String) -> void:
 	if FileAccess.file_exists(path):
 		DirAccess.remove_absolute(path)
 
