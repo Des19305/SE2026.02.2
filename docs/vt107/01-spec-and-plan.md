@@ -86,10 +86,13 @@ and `GET /export`.
 
 ## 7. Plan produced by the coding agent (v1)
 
-Prompt given to the agent (summary): *"Read docs/architecture.md §7 and
-scripts/run_management/. Plan, without writing code, a small export API for run records:
-authorization by requester role, scoping by owner, using the real repository. Give
-two options, the files you intend to change, assumptions, and the first failing test."*
+Prompt actually used: the student pasted the VT-107 assignment text with the repository and wrote
+(Vietnamese, shortened): "analyze the assignment ... what am I still missing ... do not do the
+assignment yet, analyze it carefully first, then prepare code", then approved the plan with "co" (yes).
+The paragraph that follows is how the AI formulated the task for itself (read docs/architecture.md
+section 7 and scripts/run_management/; plan without code a small export API using the real
+repository; give two options, the files to change, the assumptions and the first failing test).
+It is not a sentence the student typed.
 
 Files the agent intends to change:
 
