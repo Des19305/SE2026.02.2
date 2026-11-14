@@ -1,13 +1,26 @@
 extends "res://tests/test_case.gd"
-## VT-107 slice 1: authorization and scope of RunExportService
-## (docs/vt107/02-test-strategy.md: TC-01, TC-02, TC-03, TC-06).
-## TC-06 uses the real RunRecordRepository on a real temporary directory; no fake.
+## VT-107: RunExportService (docs/vt107/02-test-strategy.md).
+## Slice 1: TC-01, TC-02, TC-03, TC-06. Slice 2: TC-13, TC-14, TC-19.
+## Integration tests use the real RunRecordRepository / RunManager on a real
+## temporary directory; no fake storage anywhere.
 
 const RunExportService := preload("res://scripts/run_management/run_export_service.gd")
 const RunRecordRepository := preload("res://scripts/run_management/run_record_repository.gd")
+const RunConfigValidator := preload("res://scripts/run_management/run_config_validator.gd")
+const RunManager := preload("res://scripts/run_management/run_manager.gd")
 
 const BASE_TIME := 1_000_000
 const FAR_FUTURE := 9_000_000_000
+const CONFIG := {
+	"width": 50,
+	"height": 50,
+	"min_rooms": 8,
+	"max_rooms": 12,
+	"min_room_size": 5,
+	"max_room_size": 10,
+}
+## Keys the exporter reads from a stored record (see TC-13).
+const KEYS_READ_BY_EXPORTER := ["run_id", "created_at", "expires_at", "owner_id"]
 
 var root_dir: String
 
@@ -89,6 +102,78 @@ func test_player_exports_only_own_records_from_real_repository() -> void:
 		check_eq(record.get("owner_id", ""), "alice", "owner of %s" % record.get("run_id", "?"))
 		for key in record.keys():
 			check(RunExportService.EXPORT_FIELDS.has(key), "field %s must not leave the module" % key)
+
+
+# --- TC-13: what RunManager really writes has every key the exporter reads ---
+
+func test_run_manager_record_has_every_key_the_exporter_reads() -> void:
+	var manager := RunManager.new()
+	manager.records_dir = root_dir
+	manager.owner_id = "alice"
+	var started: Dictionary = manager.start_new_run(42, CONFIG)
+	check(started["ok"], "start failed: %s" % started["error"])
+	var path := root_dir.path_join(manager.current_run["run_id"] + ".json")
+	var saved: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	check(saved is Dictionary, "record file is not a JSON object")
+	if saved is Dictionary:
+		for key in KEYS_READ_BY_EXPORTER:
+			check(saved.has(key), "stored record lacks key %s" % key)
+		for key in RunExportService.EXPORT_FIELDS:
+			check(saved.has(key), "stored record lacks exported field %s" % key)
+		check_eq(saved.get("owner_id", null), "alice", "stored owner_id")
+	manager.free()
+
+
+# --- TC-14: runs of two owners through RunManager, export shows only own ------
+
+func test_owner_exports_only_own_runs_started_through_run_manager() -> void:
+	var manager := RunManager.new()
+	manager.records_dir = root_dir
+	manager.clock = func() -> int: return BASE_TIME + 5
+	manager.owner_id = "alice"
+	check(manager.start_new_run(42, CONFIG)["ok"], "alice start")
+	manager.end_run(true, "boss")
+	manager.owner_id = "bob"
+	check(manager.start_new_run(43, CONFIG)["ok"], "bob start")
+	manager.end_run(false, "died")
+	manager.free()
+
+	var service := RunExportService.new(root_dir)
+	service.clock = func() -> int: return BASE_TIME + 100
+	var result: Dictionary = service.export_runs(_player("alice"), {})
+
+	check(result["ok"], "export failed: %s" % result["error"])
+	check_eq(result["records"].size(), 1, "alice record count")
+	if result["records"].size() == 1:
+		var record: Dictionary = result["records"][0]
+		check_eq(record["owner_id"], "alice", "owner")
+		check_eq(record["status"], "completed", "status")
+		check_eq(record["won"], true, "won")
+		check_eq(record["reason"], "boss", "reason")
+		check_eq(int(record["seed"]), 42, "seed")
+
+
+# --- TC-19: numbers from the real repository are ints, config is valid -------
+
+func test_exported_numbers_are_ints_and_config_passes_run_config_validator() -> void:
+	var record := _record("alice_0", "alice", 5)
+	record["config"] = CONFIG.duplicate()
+	var repository := RunRecordRepository.new(root_dir)
+	check_eq(repository.save_new_run(record), "", "save")
+
+	var service := RunExportService.new(root_dir)
+	service.clock = func() -> int: return BASE_TIME + 100
+	var result: Dictionary = service.export_runs(_player("alice"), {})
+
+	check_eq(result["records"].size(), 1, "record count")
+	if result["records"].size() != 1:
+		return
+	var exported: Dictionary = result["records"][0]
+	for key in ["seed", "created_at", "generation_version"]:
+		check_eq(typeof(exported[key]), TYPE_INT, "type of %s" % key)
+	for key in CONFIG.keys():
+		check_eq(typeof(exported["config"][key]), TYPE_INT, "type of config.%s" % key)
+	check_eq(RunConfigValidator.validate(int(exported["seed"]), exported["config"]), "", "validator on exported config")
 
 
 # --- helpers ----------------------------------------------------------------
