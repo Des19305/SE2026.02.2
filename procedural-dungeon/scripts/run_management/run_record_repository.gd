@@ -44,7 +44,7 @@ func list_records() -> Dictionary:
 			continue
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(records_dir.path_join(file_name)))
 		if parsed is Dictionary:
-			records.append(parsed)
+			records.append(_restore_ints(parsed))
 		else:
 			skipped += 1
 	return {"records": records, "skipped": skipped}
@@ -60,6 +60,28 @@ func prune_expired(now: int) -> void:
 		var old: Variant = JSON.parse_string(FileAccess.get_file_as_string(records_dir.path_join(file_name)))
 		if old is Dictionary and int(old.get("expires_at", 0)) <= now:
 			dir.remove(file_name)
+
+
+## JSON has a single number type, so JSON.parse_string returns every number as a
+## float. Records are written with int fields (seed, timestamps, config values), so
+## whole-number floats are turned back into ints; a real fraction is left alone.
+static func _restore_ints(value: Variant) -> Variant:
+	match typeof(value):
+		TYPE_FLOAT:
+			if value == floorf(value) and absf(value) < 9007199254740992.0:
+				return int(value)
+			return value
+		TYPE_DICTIONARY:
+			var restored := {}
+			for key in value:
+				restored[key] = _restore_ints(value[key])
+			return restored
+		TYPE_ARRAY:
+			var items: Array = []
+			for item in value:
+				items.append(_restore_ints(item))
+			return items
+	return value
 
 
 func _write(file_name: String, record: Dictionary) -> String:

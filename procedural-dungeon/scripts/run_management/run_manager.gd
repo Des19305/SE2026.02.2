@@ -97,6 +97,7 @@ func _new_record(seed: int, run_config: Dictionary, now: int) -> Dictionary:
 		"status": "in_progress",
 		"won": false,
 		"reason": "",
+		"owner_id": owner_id,
 	}
 
 
