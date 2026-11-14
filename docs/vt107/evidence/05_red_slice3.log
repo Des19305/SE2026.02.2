@@ -1,0 +1,112 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS test_dungeon_generator.gd::test_same_seed_and_config_produce_identical_layout
+PASS test_dungeon_generator.gd::test_result_respects_config
+PASS test_dungeon_generator.gd::test_many_seeds_produce_valid_dungeons
+PASS test_dungeon_generator.gd::test_impossible_config_returns_explicit_failure
+PASS test_dungeon_generator.gd::test_validator_rejects_unreachable_boss
+PASS test_dungeon_generator.gd::test_validator_rejects_wrong_grid_size
+PASS test_dungeon_generator.gd::test_result_carries_generator_version
+PASS test_dungeon_generator.gd::test_known_seed_layout_is_unchanged
+PASS test_dungeon_generator.gd::test_small_debug_config_produces_valid_dungeons
+PASS test_dungeon_generator.gd::test_invalid_configs_are_rejected_without_crashing
+PASS test_dungeon_generator.gd::test_failure_result_keeps_contract_keys
+PASS test_dungeon_generator.gd::test_validator_accepts_generated_dungeon_with_config
+PASS test_dungeon_generator.gd::test_validator_rejects_tile_values_other_than_0_and_1
+PASS test_dungeon_generator.gd::test_validator_rejects_overlapping_rooms
+PASS test_dungeon_generator.gd::test_validator_checks_room_count_against_config
+PASS test_dungeon_generator.gd::test_validator_checks_room_size_against_config
+PASS test_dungeon_generator.gd::test_validator_rejects_disconnected_walkable_tile
+PASS test_dungeon_generator.gd::test_validator_rejects_start_equal_to_boss
+PASS test_dungeon_generator.gd::test_validator_survives_malformed_input
+PASS test_run_manager.gd::test_start_returns_valid_dungeon_and_emits_signal
+PASS test_run_manager.gd::test_start_writes_run_record_with_70_day_retention
+PASS test_run_manager.gd::test_caller_config_is_not_mutated
+PASS test_run_manager.gd::test_rejects_negative_seed
+PASS test_run_manager.gd::test_rejects_missing_config_key
+PASS test_run_manager.gd::test_rejects_non_integer_config_value
+PASS test_run_manager.gd::test_rejects_out_of_range_size
+PASS test_run_manager.gd::test_rejects_invalid_room_count_range
+PASS test_run_manager.gd::test_rejects_fewer_than_two_rooms
+PASS test_run_manager.gd::test_rejects_rooms_smaller_than_three_tiles
+PASS test_run_manager.gd::test_accepts_smallest_supported_dungeon
+PASS test_run_manager.gd::test_rejects_invalid_room_size_range
+PASS test_run_manager.gd::test_rejects_rooms_that_do_not_fit
+PASS test_run_manager.gd::test_rejects_start_while_run_in_progress
+PASS test_run_manager.gd::test_generation_failure_starts_no_run
+PASS test_run_manager.gd::test_replay_regenerates_identical_layout
+PASS test_run_manager.gd::test_replay_without_previous_run_fails
+PASS test_run_manager.gd::test_end_run_updates_record_and_emits_signal
+PASS test_run_manager.gd::test_expired_records_are_pruned_and_fresh_ones_kept
+ERROR: Could not create directory: 'user://test_runs/blocker/runs'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] save_new_run (res://scripts/run_management/run_record_repository.gd:18)
+       [1] start_new_run (res://scripts/run_management/run_manager.gd:42)
+       [2] test_storage_failure_blocks_run_start (res://tests/test_run_manager.gd:200)
+       [3] _init (res://tests/run_tests.gd:49)
+PASS test_run_manager.gd::test_storage_failure_blocks_run_start
+PASS test_seed_utils.gd::test_new_seed_is_in_supported_range
+PASS test_seed_utils.gd::test_new_seed_with_injected_rng_is_reproducible
+PASS test_seed_utils.gd::test_new_seeds_are_not_all_the_same
+PASS test_seed_utils.gd::test_new_seed_produces_valid_and_repeatable_dungeon
+PASS test_seed_utils.gd::test_largest_seed_generates_valid_dungeon
+PASS test_seed_utils.gd::test_is_valid_seed_bounds
+PASS test_seed_utils.gd::test_parse_accepts_decimal_seeds
+PASS test_seed_utils.gd::test_parse_rejects_invalid_text
+PASS test_seed_utils.gd::test_new_seed_round_trips_through_text
+PASS test_seed_utils.gd::test_format_seed_is_plain_decimal
+PASS test_seed_utils.gd::test_seed_report_contains_what_is_needed_to_reproduce
+PASS test_seed_utils.gd::test_seed_report_does_not_depend_on_key_order
+PASS test_run_export.gd::test_invalid_requesters_are_not_authorized
+PASS test_run_export.gd::test_player_cannot_export_another_owners_scope
+PASS test_run_export.gd::test_scope_resolution_for_player_and_maintainer
+PASS test_run_export.gd::test_player_exports_only_own_records_from_real_repository
+PASS test_run_export.gd::test_run_manager_record_has_every_key_the_exporter_reads
+PASS test_run_export.gd::test_owner_exports_only_own_runs_started_through_run_manager
+PASS test_run_export.gd::test_exported_numbers_are_ints_and_config_passes_run_config_validator
+FAIL test_run_export.gd::test_select_records_drops_expired_and_orders_by_created_at_then_run_id
+    - ids kept, in order (no_expiry is dropped: cannot prove it is valid): expected <["a", "b", "late", "last_valid"]>, got <["late", "b", "a", "gone_before", "gone_exactly", "last_valid", "no_expiry"]>
+PASS test_run_export.gd::test_invalid_scope_is_rejected_and_requester_is_checked_first
+PASS test_run_export.gd::test_last_run_copy_is_not_exported_as_a_record
+FAIL test_run_export.gd::test_expired_record_still_on_disk_is_not_exported
+    - only the unexpired record: expected <["valid"]>, got <["expired", "valid"]>
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:82)
+       [2] _export (res://tests/test_run_export.gd:352)
+       [3] test_corrupt_files_are_skipped_and_counted (res://tests/test_run_export.gd:257)
+       [4] _init (res://tests/run_tests.gd:49)
+ERROR: Parse JSON failed. Error at line 0: Unterminated string
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:82)
+       [2] _export (res://tests/test_run_export.gd:352)
+       [3] test_corrupt_files_are_skipped_and_counted (res://tests/test_run_export.gd:257)
+       [4] _init (res://tests/run_tests.gd:49)
+PASS test_run_export.gd::test_corrupt_files_are_skipped_and_counted
+FAIL test_run_export.gd::test_records_without_owner_are_only_visible_to_a_maintainer
+    - maintainer sees everything: expected <["legacy", "unowned", "mine"]>, got <["legacy", "mine", "unowned"]>
+ERROR: Parse JSON failed. Error at line 0: Expected ':'
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:82)
+       [2] _export (res://tests/test_run_export.gd:352)
+       [3] test_export_does_not_change_stored_files (res://tests/test_run_export.gd:295)
+       [4] _init (res://tests/run_tests.gd:49)
+ERROR: Parse JSON failed. Error at line 0: Expected ':'
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:82)
+       [2] _export (res://tests/test_run_export.gd:352)
+       [3] test_export_does_not_change_stored_files (res://tests/test_run_export.gd:296)
+       [4] _init (res://tests/run_tests.gd:49)
+PASS test_run_export.gd::test_export_does_not_change_stored_files
+PASS test_run_export.gd::test_missing_records_directory_exports_nothing_and_creates_nothing
+
+66 tests, 63 passed, 3 failed

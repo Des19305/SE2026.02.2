@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 ## VT-107: RunExportService (docs/vt107/02-test-strategy.md).
 ## Slice 1: TC-01, TC-02, TC-03, TC-06. Slice 2: TC-13, TC-14, TC-19.
+## Slice 3: TC-04, TC-05, TC-07, TC-08, TC-09, TC-10, TC-11, TC-12.
 ## Integration tests use the real RunRecordRepository / RunManager on a real
 ## temporary directory; no fake storage anywhere.
 
@@ -176,6 +177,143 @@ func test_exported_numbers_are_ints_and_config_passes_run_config_validator() -> 
 	check_eq(RunConfigValidator.validate(int(exported["seed"]), exported["config"]), "", "validator on exported config")
 
 
+# --- TC-04: expiry boundary and a fixed order (unit) -------------------------
+
+func test_select_records_drops_expired_and_orders_by_created_at_then_run_id() -> void:
+	var now := BASE_TIME + 100
+	var records: Array = [
+		_stamped("late", BASE_TIME + 30, now + 10),
+		_stamped("b", BASE_TIME + 10, now + 10),
+		_stamped("a", BASE_TIME + 10, now + 10),
+		_stamped("gone_before", BASE_TIME + 5, now - 1),
+		_stamped("gone_exactly", BASE_TIME + 6, now),
+		_stamped("last_valid", BASE_TIME + 40, now + 1),
+	]
+	var no_expiry := _stamped("no_expiry", BASE_TIME + 7, now + 10)
+	no_expiry.erase("expires_at")
+	records.append(no_expiry)
+	var access := {"error": "", "owner_id": "", "any_owner": true}
+
+	var ids: Array = RunExportService.select_records(records, access, now).map(func(r): return r["run_id"])
+
+	check_eq(ids, ["a", "b", "late", "last_valid"], "ids kept, in order (no_expiry is dropped: cannot prove it is valid)")
+
+
+# --- TC-05: invalid scope, and the requester is judged first (negative) -------
+
+func test_invalid_scope_is_rejected_and_requester_is_checked_first() -> void:
+	var bad_scopes: Array = [{"owner_id": 7}, {"owner_id": ""}, "alice", null, [], 5]
+	for i in bad_scopes.size():
+		var access := RunExportService.authorize(_player("alice"), bad_scopes[i])
+		check_eq(access["error"], RunExportService.ERR_INVALID_SCOPE, "bad scope #%d for player" % i)
+		var maintainer_access := RunExportService.authorize(_maintainer(), bad_scopes[i])
+		check_eq(maintainer_access["error"], RunExportService.ERR_INVALID_SCOPE, "bad scope #%d for maintainer" % i)
+	var both_bad := RunExportService.authorize({"id": "alice", "role": "guest"}, {"owner_id": 7})
+	check_eq(both_bad["error"], RunExportService.ERR_NOT_AUTHORIZED, "invalid requester wins over invalid scope")
+
+
+# --- TC-07: last_run.json is a copy, not a second record (contract) -----------
+
+func test_last_run_copy_is_not_exported_as_a_record() -> void:
+	var repository := RunRecordRepository.new(root_dir)
+	for i in 4:
+		check_eq(repository.save_new_run(_record("alice_%d" % i, "alice", i)), "", "save %d" % i)
+	check(FileAccess.file_exists(root_dir.path_join("last_run.json")), "precondition: last_run.json exists on disk")
+
+	var result: Dictionary = _export(_player("alice"), root_dir)
+
+	var ids: Array = result["records"].map(func(r): return r["run_id"])
+	check_eq(ids, ["alice_0", "alice_1", "alice_2", "alice_3"], "each run exactly once")
+
+
+# --- TC-08: an expired file that is still on disk is not exported -------------
+
+func test_expired_record_still_on_disk_is_not_exported() -> void:
+	var repository := RunRecordRepository.new(root_dir)
+	check_eq(repository.save_new_run(_record("valid", "alice", 0)), "", "save valid")
+	# Saved last: save_new_run prunes before writing, so this expired record stays on disk.
+	var expired := _record("expired", "alice", 10)
+	expired["expires_at"] = BASE_TIME + 20
+	check_eq(repository.save_new_run(expired), "", "save expired")
+	check(FileAccess.file_exists(root_dir.path_join("expired.json")), "precondition: expired file still on disk")
+
+	var result: Dictionary = _export(_player("alice"), root_dir)
+
+	var ids: Array = result["records"].map(func(r): return r["run_id"])
+	check_eq(ids, ["valid"], "only the unexpired record")
+
+
+# --- TC-09: corrupt files are skipped and counted (failure path) --------------
+
+func test_corrupt_files_are_skipped_and_counted() -> void:
+	expect_error("Parse JSON failed")
+	var repository := RunRecordRepository.new(root_dir)
+	check_eq(repository.save_new_run(_record("alice_0", "alice", 0)), "", "save 0")
+	check_eq(repository.save_new_run(_record("alice_1", "alice", 1)), "", "save 1")
+	_write_raw("truncated.json", "{\"run_id\": \"x\", \"se")
+	_write_raw("array.json", "[]")
+	_write_raw("empty.json", "")
+
+	var result: Dictionary = _export(_player("alice"), root_dir)
+
+	check(result["ok"], "export must not fail because of corrupt files: %s" % result["error"])
+	var ids: Array = result["records"].map(func(r): return r["run_id"])
+	check_eq(ids, ["alice_0", "alice_1"], "valid records survive")
+	check_eq(result["skipped"], 3, "corrupt files counted")
+
+
+# --- TC-10: records without an owner belong to nobody ------------------------
+
+func test_records_without_owner_are_only_visible_to_a_maintainer() -> void:
+	var repository := RunRecordRepository.new(root_dir)
+	var legacy := _record("legacy", "", 0)
+	legacy.erase("owner_id")
+	check_eq(repository.save_new_run(legacy), "", "save legacy")
+	check_eq(repository.save_new_run(_record("unowned", "", 1)), "", "save empty owner")
+	check_eq(repository.save_new_run(_record("mine", "alice", 2)), "", "save alice")
+
+	var as_player: Array = _export(_player("alice"), root_dir)["records"].map(func(r): return r["run_id"])
+	var as_maintainer: Array = _export(_maintainer(), root_dir)["records"].map(func(r): return r["run_id"])
+
+	check_eq(as_player, ["mine"], "player sees only own")
+	check_eq(as_maintainer, ["legacy", "unowned", "mine"], "maintainer sees everything")
+
+
+# --- TC-11: export never changes what is stored (read-only invariant) --------
+
+func test_export_does_not_change_stored_files() -> void:
+	expect_error("Parse JSON failed")
+	var repository := RunRecordRepository.new(root_dir)
+	check_eq(repository.save_new_run(_record("valid", "alice", 0)), "", "save valid")
+	var expired := _record("expired", "alice", 10)
+	expired["expires_at"] = BASE_TIME + 20
+	check_eq(repository.save_new_run(expired), "", "save expired")
+	_write_raw("corrupt.json", "{\"broken\"")
+	var before := _snapshot(root_dir)
+	check_eq(before.size(), 4, "precondition: valid, expired, corrupt and last_run.json exist")
+
+	_export(_player("alice"), root_dir)
+	_export(_maintainer(), root_dir)
+	var denied: Dictionary = _export({}, root_dir)
+
+	check_eq(denied["ok"], false, "denied export fails")
+	check_eq(_snapshot(root_dir), before, "files and contents unchanged after successful and denied exports")
+
+
+# --- TC-12: no records directory yet (edge / failure path) -------------------
+
+func test_missing_records_directory_exports_nothing_and_creates_nothing() -> void:
+	var missing := root_dir.path_join("never_created")
+
+	var result: Dictionary = _export(_player("alice"), missing)
+
+	check(result["ok"], "a missing directory means no runs yet, not an error: %s" % result["error"])
+	check_eq(result["records"], [], "records")
+	check_eq(result["skipped"], 0, "skipped")
+	check(DirAccess.open(missing) == null, "export must not create the directory")
+	check(DirAccess.open(root_dir) == null, "export must not create the parent directory")
+
+
 # --- helpers ----------------------------------------------------------------
 
 func _player(id: String) -> Dictionary:
@@ -199,6 +337,36 @@ func _record(run_id: String, owner_id: String, offset: int) -> Dictionary:
 		"reason": "boss",
 		"owner_id": owner_id,
 	}
+
+
+func _stamped(run_id: String, created_at: int, expires_at: int) -> Dictionary:
+	var record := _record(run_id, "alice", 0)
+	record["created_at"] = created_at
+	record["expires_at"] = expires_at
+	return record
+
+
+func _export(requester: Variant, dir: String) -> Dictionary:
+	var service := RunExportService.new(dir)
+	service.clock = func() -> int: return BASE_TIME + 100
+	return service.export_runs(requester, {})
+
+
+func _write_raw(file_name: String, text: String) -> void:
+	var file := FileAccess.open(root_dir.path_join(file_name), FileAccess.WRITE)
+	file.store_string(text)
+	file.close()
+
+
+## File name -> MD5 of its content, for every file in dir.
+func _snapshot(dir_path: String) -> Dictionary:
+	var snapshot := {}
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		return snapshot
+	for file_name in dir.get_files():
+		snapshot[file_name] = FileAccess.get_md5(dir_path.path_join(file_name))
+	return snapshot
 
 
 func _remove_dir(path: String) -> void:
