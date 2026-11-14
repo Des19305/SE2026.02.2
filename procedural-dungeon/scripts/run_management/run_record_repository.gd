@@ -30,6 +30,26 @@ func update(record: Dictionary) -> void:
 	_write(record["run_id"] + ".json", record)
 
 
+## Read-only. Returns {"records": Array, "skipped": int}: every run record file
+## except last_run.json (a copy of the latest record), plus how many files could
+## not be read as a record. Does not filter by owner or expiry.
+func list_records() -> Dictionary:
+	var records: Array = []
+	var skipped := 0
+	var dir := DirAccess.open(records_dir)
+	if dir == null:
+		return {"records": records, "skipped": skipped}
+	for file_name in dir.get_files():
+		if not file_name.ends_with(".json") or file_name == LAST_RUN_FILE:
+			continue
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(records_dir.path_join(file_name)))
+		if parsed is Dictionary:
+			records.append(parsed)
+		else:
+			skipped += 1
+	return {"records": records, "skipped": skipped}
+
+
 func prune_expired(now: int) -> void:
 	var dir := DirAccess.open(records_dir)
 	if dir == null:
