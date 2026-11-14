@@ -2,8 +2,7 @@ extends RefCounted
 ## Exports run records to authorized requesters, limited to their scope (VT-107,
 ## docs/vt107/01-spec-and-plan.md). Read-only: never writes or deletes records.
 ##
-## Implemented so far: authorization, owner scope, field projection. Expiry,
-## ordering and corrupt-file handling follow with their own tests.
+## Authorization, owner scope, expiry filter, stable order and field projection.
 
 const ROLE_PLAYER := "player"
 const ROLE_MAINTAINER := "maintainer"
@@ -58,18 +57,27 @@ static func authorize(requester: Variant, scope: Variant) -> Dictionary:
 	return {"error": "", "owner_id": "", "any_owner": true}
 
 
-## Keeps the records that access allows, as copies reduced to EXPORT_FIELDS.
-## Records without owner_id (older records) match no named owner.
-static func select_records(records: Array, access: Dictionary, _now: int) -> Array:
+## Keeps the records that access allows and that are still valid at now, as copies
+## reduced to EXPORT_FIELDS, ordered by created_at then run_id.
+## Dropped: records of other owners (records without owner_id match no named owner),
+## records with expires_at <= now, and records without a numeric expires_at (validity
+## cannot be shown; RunRecordRepository.prune_expired treats them as expired too).
+static func select_records(records: Array, access: Dictionary, now: int) -> Array:
 	var selected: Array = []
 	for record in records:
 		if not access["any_owner"] and record.get("owner_id", "") != access["owner_id"]:
+			continue
+		var expires_at: Variant = record.get("expires_at", null)
+		if typeof(expires_at) != TYPE_INT and typeof(expires_at) != TYPE_FLOAT:
+			continue
+		if expires_at <= now:
 			continue
 		var exported := {}
 		for field in EXPORT_FIELDS:
 			if record.has(field):
 				exported[field] = record[field].duplicate(true) if record[field] is Dictionary else record[field]
 		selected.append(exported)
+	selected.sort_custom(_is_before)
 	return selected
 
 
@@ -86,3 +94,11 @@ func export_runs(requester: Variant, scope: Variant = {}) -> Dictionary:
 
 static func _denied(error: String) -> Dictionary:
 	return {"error": error, "owner_id": "", "any_owner": false}
+
+
+static func _is_before(a: Dictionary, b: Dictionary) -> bool:
+	var a_time: Variant = a.get("created_at", 0)
+	var b_time: Variant = b.get("created_at", 0)
+	if a_time != b_time:
+		return a_time < b_time
+	return str(a.get("run_id", "")) < str(b.get("run_id", ""))
