@@ -24,15 +24,15 @@ The headline "remove one validation" mutants:
 
 **First run: 25 of 27 killed (93%), two survivors** (`evidence/12_mutation_before_tests_linux.log`):
 
-- **F1** `expires_at` leaves the module. The projection `EXPORT_FIELDS` was only tested by checking
-  that every returned key is allowed, and the saved test record had no field that should be hidden
-  except `expires_at`; the check passed because the mutant added the key back to the allow-list
-  path in a way the assertion did not reach. A real gap: the test did not pin what must NOT leave.
-- **F2** `config` is no longer deep-copied. No test changed the exported config and looked at the
-  stored one. A real gap: a caller could mutate shared data.
+- **F1** the mutant adds `expires_at` to the `EXPORT_FIELDS` allow-list, so the internal retention
+  timestamp leaves the module. It survived because the only check was circular: TC-06 asserted that every
+  returned key is in `RunExportService.EXPORT_FIELDS`, the same constant the mutant had changed, so the
+  assertion followed the bug. A real gap: nothing pinned which fields must NOT leave, independently of the code.
+- **F2** `config` is no longer deep-copied. No test changed the exported config and then looked at the
+  stored record. A real gap: a caller could change the shared data.
 
-Both survived because the tests had been written for the behavior the author expected, not for the
-bad behavior. Added: **TC-20** (`test_export_exposes_only_documented_fields`) and **TC-21**
+Both survived because the tests checked the expected behavior but nothing that would break when the code
+misbehaved in these two ways. Added: **TC-20** (`test_export_exposes_only_documented_fields`) and **TC-21**
 (`test_exported_config_is_a_copy_of_the_stored_one`); no production code changed.
 **Second run: 27 of 27 killed** (`evidence/13_mutation_after_tests_linux.log`); on Windows 27 of 27
 killed as well (`evidence/win_07_mutation_slice5.log`, reported by the student). An independent
