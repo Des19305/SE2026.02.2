@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 ## VT-107: RunExportService (docs/vt107/02-test-strategy.md).
 ## Slice 1: TC-01, TC-02, TC-03, TC-06. Slice 2: TC-13, TC-14, TC-19.
 ## Slice 3: TC-04, TC-05, TC-07, TC-08, TC-09, TC-10, TC-11, TC-12.
+## Mutation follow-up (slice 5): TC-20, TC-21 (killed the survivors F1 and F2).
 ## Integration tests use the real RunRecordRepository / RunManager on a real
 ## temporary directory; no fake storage anywhere.
 
@@ -277,6 +278,40 @@ func test_records_without_owner_are_only_visible_to_a_maintainer() -> void:
 
 	check_eq(as_player, ["mine"], "player sees only own")
 	check_eq(as_maintainer, ["legacy", "unowned", "mine"], "maintainer sees everything")
+
+
+# --- TC-20: only the documented fields leave the module (AC-EXP-01) ---------
+
+func test_export_exposes_only_documented_fields() -> void:
+	var now := BASE_TIME + 100
+	var record := _stamped("r1", BASE_TIME + 10, now + 10)
+	record["internal_note"] = "must not leave the module"
+	var access := {"error": "", "owner_id": "", "any_owner": true}
+
+	var exported: Array = RunExportService.select_records([record], access, now)
+
+	check_eq(exported.size(), 1, "the record is exported")
+	if exported.size() != 1:
+		return
+	check(not exported[0].has("expires_at"), "expires_at stays inside the module")
+	check(not exported[0].has("internal_note"), "fields outside EXPORT_FIELDS stay inside the module")
+	check(exported[0].has("run_id") and exported[0].has("owner_id"), "documented fields are kept")
+
+
+# --- TC-21: an exported record is a copy, not the stored object (NFR-2) -------
+
+func test_exported_config_is_a_copy_of_the_stored_one() -> void:
+	var now := BASE_TIME + 100
+	var record := _stamped("r1", BASE_TIME + 10, now + 10)
+	var access := {"error": "", "owner_id": "", "any_owner": true}
+
+	var exported: Array = RunExportService.select_records([record], access, now)
+
+	check_eq(exported.size(), 1, "the record is exported")
+	if exported.size() != 1:
+		return
+	exported[0]["config"]["width"] = 999
+	check_eq(record["config"]["width"], 50, "changing the exported config must not change the stored record")
 
 
 # --- TC-11: export never changes what is stored (read-only invariant) --------

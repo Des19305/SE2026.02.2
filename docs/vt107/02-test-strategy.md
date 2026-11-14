@@ -63,6 +63,8 @@ Priority: P0 = must pass, covers the invariant; P1 = important; P2 = useful.
 | TC-17 | AC-EXP-05, R-CONC (failure path) | Concurrency | 20 expired seed records, writers keep calling `save_new_run` (which prunes) while exporters read | no crash, no expired record returned, only valid records | P2 |
 | TC-18 | NFR-1, R-PERF | Load harness | same mix as TC-15 with 200 tasks, per-task duration measured | p95 at most 5.0 s; harness prints p50/p95/max and the machine used | P1 |
 | TC-19 | AC-EXP-01, **R-CONTRACT** | Integration, real repo | record with int `seed`, `created_at`, `generation_version` and an int `config` saved by the real repository, then exported | the exported numbers have type int (the file format makes them float), and `RunConfigValidator.validate` accepts the exported config | P0 |
+| TC-20 | AC-EXP-01, R-LEAK | Unit | a record with `expires_at` and an extra field `internal_note`, exported through `select_records` | the exported record has neither `expires_at` nor `internal_note`, and still has `run_id` and `owner_id` | P1 |
+| TC-21 | AC-EXP-01, NFR-2 | Unit | `select_records` on a record with a `config` dictionary; the caller then changes the exported `config` | the stored record's `config` is unchanged (the export is a deep copy) | P2 |
 
 Negative tests: TC-01, TC-02, TC-05 (and TC-16 for invalid requesters under load).
 Failure-path tests tied to their own risk: TC-09 (corrupt file, R-CONTRACT),
