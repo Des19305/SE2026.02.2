@@ -49,7 +49,7 @@ static func authorize(requester: Variant, scope: Variant) -> Dictionary:
 		named_owner = scope["owner_id"]
 
 	if role == ROLE_PLAYER:
-		if named_owner != "" and named_owner != id:
+		if false:
 			return _denied(ERR_FORBIDDEN_SCOPE)
 		return {"error": "", "owner_id": id, "any_owner": false}
 	if named_owner != "":
