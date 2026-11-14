@@ -78,9 +78,11 @@ so the real repository hands the exporter `42.0` where an in-memory fake gives `
 particular output: *no leak*, *no duplicate*, *no invalid result*, *nothing lost* (a
 record that existed before the group started is always returned to its owner).
 
-**How tasks are run.** `WorkerThreadPool.add_group_task(callable, 200)`, then a blocking
-`wait_for_group_task_completion` (the runner does not support `await`, see plan review R5).
-Each task reads its own index, so its role (writer, player, maintainer, invalid) is fixed by
+**How tasks are run.** One `Thread` per task (200 threads), all released together by a start
+gate (`Semaphore`), then every thread is joined (the runner does not support `await`, see plan
+review R5). `WorkerThreadPool` was tried first and rejected: it starts as many workers as CPUs, so on
+the 1-CPU development machine the tasks never overlapped (`max_concurrent = 1`, measured); the
+tests now assert `max_concurrent >= 2`. Each task reads its own index, so its role (writer, player, maintainer, invalid) is fixed by
 that index and does not depend on scheduling.
 
 **Test data choice**
@@ -102,9 +104,10 @@ that index and does not depend on scheduling.
 (TC-16), scope logic that depends on directory order or on a half-finished listing
 (TC-15), a race between export and pruning (TC-17).
 
-**Limit.** The sandbox used for development has one CPU; threads interleave but do not run
-truly in parallel. The result must be repeated on a multi-core machine before claiming more
-than "no failure observed".
+**Limit.** The development machine has one CPU: threads are time-sliced, not truly parallel. The
+measured overlap is large (60-179 tasks inside the task body at once) because file I/O blocks and
+releases the CPU, but the result must be repeated on a multi-core machine before claiming more than
+"no failure observed". The student's Windows run is the second environment.
 
 ## 5. Flaky-test risks planned for review
 
