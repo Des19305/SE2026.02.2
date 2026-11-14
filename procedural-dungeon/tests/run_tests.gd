@@ -9,16 +9,24 @@ const TEST_SCRIPTS := [
 	"res://tests/test_dungeon_generator.gd",
 	"res://tests/test_run_manager.gd",
 	"res://tests/test_seed_utils.gd",
+	"res://tests/test_run_export.gd",
+	"res://tests/test_run_export_concurrency.gd",
 ]
 
 
 ## Records engine/script errors so a test that crashes mid-way is not reported as passing.
 class ErrorCollector extends Logger:
 	var errors: Array[String] = []
+	## Logger callbacks can arrive from any thread (concurrency tests run worker threads);
+	## an unguarded Array.append from many threads corrupted the heap (VT-107 slice 4).
+	var _mutex := Mutex.new()
 
 	func _log_error(function: String, file: String, line: int, code: String, rationale: String,
 			_editor_notify: bool, _error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
-		errors.append("%s (%s:%d in %s)" % [rationale if rationale != "" else code, file, line, function])
+		var entry := "%s (%s:%d in %s)" % [rationale if rationale != "" else code, file, line, function]
+		_mutex.lock()
+		errors.append(entry)
+		_mutex.unlock()
 
 	func _log_message(_message: String, _error: bool) -> void:
 		pass

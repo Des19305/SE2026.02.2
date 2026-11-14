@@ -21,6 +21,9 @@ var records_dir := "user://runs"
 var clock: Callable = func() -> int: return int(Time.get_unix_time_from_system())
 var current_run := {}
 var last_run := {}
+## Who the next runs belong to (used by RunExportService to limit exports).
+## Empty means no owner. Not part of the generation config, so replay is unaffected.
+var owner_id := ""
 
 
 func start_new_run(seed: int, config: Dictionary) -> Dictionary:
@@ -94,6 +97,7 @@ func _new_record(seed: int, run_config: Dictionary, now: int) -> Dictionary:
 		"status": "in_progress",
 		"won": false,
 		"reason": "",
+		"owner_id": owner_id,
 	}
 
 

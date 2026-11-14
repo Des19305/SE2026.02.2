@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+VT-107 load harness: 200 concurrent tasks x 5 runs (half writers, half exporters)
+environment: Linux, 1 logical CPU(s), Godot 4.7.2-stable (official)
+run 1: total 745 ms | task ms p50 258.6 p95 668.9 p99 685.8 max 724.1 | max overlap 133 | unreadable files skipped 15 | invariant violations 0
+run 2: total 485 ms | task ms p50 187.8 p95 410.0 p99 428.0 max 461.9 | max overlap 141 | unreadable files skipped 19 | invariant violations 0
+run 3: total 514 ms | task ms p50 112.1 p95 456.3 p99 467.0 max 489.2 | max overlap 109 | unreadable files skipped 0 | invariant violations 0
+run 4: total 487 ms | task ms p50 182.7 p95 419.3 p99 433.0 max 456.9 | max overlap 127 | unreadable files skipped 15 | invariant violations 0
+run 5: total 548 ms | task ms p50 189.7 p95 485.3 p99 492.2 max 524.5 | max overlap 125 | unreadable files skipped 11 | invariant violations 0
+worst p95 over 5 runs = 0.669 s; target <= 5.0 s: PASS; invariants: held

@@ -1,0 +1,10 @@
+MUTANT C1: export_runs keeps the decision in a member variable (state shared between calls)
+run 1: exit=1 70 tests, 69 passed, 1 failed; failing: test_shared_service_instance_keeps_requesters_apart
+        - task 0: alice received record seed_bob_0 of owner bob
+        - task 0: alice received record seed_bob_1 of owner bob
+        - task 0: alice received record seed_bob_2 of owner bob
+run 2: exit=1 70 tests, 69 passed, 1 failed; failing: test_shared_service_instance_keeps_requesters_apart
+run 3: exit=1 70 tests, 69 passed, 1 failed; failing: test_shared_service_instance_keeps_requesters_apart
+run 4: exit=1 70 tests, 69 passed, 1 failed; failing: test_shared_service_instance_keeps_requesters_apart
+run 5: exit=1 70 tests, 69 passed, 1 failed; failing: test_shared_service_instance_keeps_requesters_apart
+run 6: exit=1 70 tests, 69 passed, 1 failed; failing: test_shared_service_instance_keeps_requesters_apart

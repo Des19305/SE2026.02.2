@@ -1,0 +1,21 @@
+M1 TC-05: empty owner_id accepted in scope
+  exit=1  66 tests, 65 passed, 1 failed
+  failing: test_invalid_scope_is_rejected_and_requester_is_checked_first
+M2 TC-07: last_run.json listed as a record
+  exit=1  66 tests, 62 passed, 4 failed
+  failing: test_exported_numbers_are_ints_and_config_passes_run_config_validator, test_last_run_copy_is_not_exported_as_a_record, test_corrupt_files_are_skipped_and_counted, test_records_without_owner_are_only_visible_to_a_maintainer
+M3 TC-09: corrupt files not counted
+  exit=1  66 tests, 65 passed, 1 failed
+  failing: test_corrupt_files_are_skipped_and_counted
+M4 TC-10: records without owner_id visible to players
+  exit=1  66 tests, 65 passed, 1 failed
+  failing: test_records_without_owner_are_only_visible_to_a_maintainer
+M5 TC-11: export prunes expired files
+  exit=1  66 tests, 65 passed, 1 failed
+  failing: test_export_does_not_change_stored_files
+M6 TC-12: export creates the records directory
+  exit=1  66 tests, 65 passed, 1 failed
+  failing: test_missing_records_directory_exports_nothing_and_creates_nothing
+M7 TC-04: expiry boundary off by one (< instead of <=)
+  exit=1  66 tests, 65 passed, 1 failed
+  failing: test_select_records_drops_expired_and_orders_by_created_at_then_run_id
