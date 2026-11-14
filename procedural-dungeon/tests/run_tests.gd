@@ -10,6 +10,7 @@ const TEST_SCRIPTS := [
 	"res://tests/test_run_manager.gd",
 	"res://tests/test_seed_utils.gd",
 	"res://tests/test_run_export.gd",
+	"res://tests/test_run_export_concurrency.gd",
 ]
 
 

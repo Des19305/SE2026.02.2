@@ -1,0 +1,29 @@
+VT-107 slice 4, red state: concurrency tests + workload against the unmodified runner (6 consecutive runs, 1-CPU Linux sandbox, Godot 4.7.2)
+run 1: exit 0 (70 passed)
+run 2: exit 134 (SIGABRT)
+run 3: exit 134 (SIGABRT)
+run 4: exit 0 (70 passed)
+run 5: exit 134 (SIGABRT)
+run 6: exit 134 (SIGABRT)
+
+--- last 12 lines of run 2 ---
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+realloc(): invalid old size
+Aborted
+
+--- last 6 lines of run 3 ---
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+malloc(): smallbin double linked list corrupted
+Aborted
