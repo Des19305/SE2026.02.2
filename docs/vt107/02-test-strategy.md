@@ -62,10 +62,15 @@ Priority: P0 = must pass, covers the invariant; P1 = important; P2 = useful.
 | TC-16 | AC-EXP-05, R-CONC, R-LEAK (negative) | Concurrency | one shared `RunExportService` instance, 200 tasks alternating alice, bob, invalid, maintainer | invalid always gets 0 records; alice never sees bob's and vice versa (catches state kept between calls) | P0 |
 | TC-17 | AC-EXP-05, R-CONC (failure path) | Concurrency | 20 expired seed records, writers keep calling `save_new_run` (which prunes) while exporters read | no crash, no expired record returned, only valid records | P2 |
 | TC-18 | NFR-1, R-PERF | Load harness | same mix as TC-15 with 200 tasks, per-task duration measured | p95 at most 5.0 s; harness prints p50/p95/max and the machine used | P1 |
+| TC-19 | AC-EXP-01, **R-CONTRACT** | Integration, real repo | record with int `seed`, `created_at`, `generation_version` and an int `config` saved by the real repository, then exported | the exported numbers have type int (the file format makes them float), and `RunConfigValidator.validate` accepts the exported config | P0 |
 
 Negative tests: TC-01, TC-02, TC-05 (and TC-16 for invalid requesters under load).
 Failure-path tests tied to their own risk: TC-09 (corrupt file, R-CONTRACT),
 TC-12 (missing directory), TC-17 (race with pruning, R-CONC).
+
+TC-19 was added while implementing slice 1: `JSON.parse_string` returns every number as float,
+so the real repository hands the exporter `42.0` where an in-memory fake gives `42`, and
+`RunConfigValidator` requires `TYPE_INT` for config values. A fake repository would not show it.
 
 ## 4. Concurrency testing technique
 
