@@ -1,4 +1,4 @@
-7e0953c30ea7bd0ae983e92aaa4ebc4d684804b7
+1fe28cbdee1b2c7034f3bf880bd0b8ffd667b6b8
 4.7.2.stable.official.ed1daf0bf
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
@@ -129,122 +129,9 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
        [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
@@ -257,157 +144,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [2] _export_task (res://tests/workload_run_export.gd:215)
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
@@ -458,38 +194,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
        [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
        [2] _write_task (res://tests/workload_run_export.gd:208)
@@ -497,7 +201,14 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
    at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
@@ -505,37 +216,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [2] _write_task (res://tests/workload_run_export.gd:208)
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
@@ -546,41 +226,11 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
    at: parse_string (core/io/json.cpp:629)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
        [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
@@ -595,126 +245,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [2] _write_task (res://tests/workload_run_export.gd:208)
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
        [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
@@ -722,30 +252,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    GDScript backtrace (most recent call first):
        [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
        [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
@@ -753,23 +259,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
    at: parse_string (core/io/json.cpp:629)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
@@ -791,7 +280,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [2] _export_task (res://tests/workload_run_export.gd:215)
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
@@ -801,62 +289,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
@@ -865,38 +297,6 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
    at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
-       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
-       [2] _write_task (res://tests/workload_run_export.gd:208)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   at: parse_string (core/io/json.cpp:629)
-ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   at: parse_string (core/io/json.cpp:629)
-   at: parse_string (core/io/json.cpp:629)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
-   GDScript backtrace (most recent call first):
-       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
-       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
-       [2] _export_task (res://tests/workload_run_export.gd:215)
-       [3] _task (res://tests/workload_run_export.gd:191)
-       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
        [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
@@ -929,6 +329,966 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
    at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] list_records (res://scripts/run_management/run_record_repository.gd:45)
+       [1] export_runs (res://scripts/run_management/run_export_service.gd:90)
+       [2] _export_task (res://tests/workload_run_export.gd:215)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+   at: parse_string (core/io/json.cpp:629)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
+ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
+   at: parse_string (core/io/json.cpp:629)
+   at: parse_string (core/io/json.cpp:629)
+   GDScript backtrace (most recent call first):
+       [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
+       [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
+       [2] _write_task (res://tests/workload_run_export.gd:208)
+       [3] _task (res://tests/workload_run_export.gd:191)
+       [4] _run_after_gate (res://tests/workload_run_export.gd:182)
    GDScript backtrace (most recent call first):
        [0] prune_expired (res://scripts/run_management/run_record_repository.gd:60)
        [1] save_new_run (res://scripts/run_management/run_record_repository.gd:21)
@@ -944,7 +1304,7 @@ ERROR: Parse JSON failed. Error at line 0: Unknown error getting token
        [3] _task (res://tests/workload_run_export.gd:191)
        [4] _run_after_gate (res://tests/workload_run_export.gd:182)
 PASS test_run_export_concurrency.gd::test_export_while_expired_files_are_pruned
-    TC-18: 200 tasks, max overlap 181, p95 = 0.992 s (target <= 5.0 s)
+    TC-18: 200 tasks, max overlap 180, p95 = 1.357 s (target <= 5.0 s)
 PASS test_run_export_concurrency.gd::test_200_concurrent_tasks_p95_is_within_5_seconds
 
 72 tests, 72 passed, 0 failed
