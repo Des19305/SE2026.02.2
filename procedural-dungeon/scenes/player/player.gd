@@ -4,13 +4,39 @@ extends Node2D
 ## Add the player as a child of the DungeonRenderer so both share the same local space.
 
 signal moved(cell: Vector2i)
+signal health_changed(current_hp: int, max_hp: int)
+signal max_hp_changed(max_hp: int)
 
 const MOVE_INTERVAL: float = 0.12  # seconds between steps while a key is held
 const BODY_COLOR := Color("#ebcb8b")
+const _INITIAL_MAX_HP := 100
 
 var grid: DungeonGrid = null
 var cell: Vector2i = Vector2i.ZERO
 var _cooldown: float = 0.0
+var _current_hp: int = _INITIAL_MAX_HP
+var _max_hp: int = _INITIAL_MAX_HP
+
+
+func get_current_hp() -> int:
+	return _current_hp
+
+
+func get_max_hp() -> int:
+	return _max_hp
+
+
+func heal(amount: int) -> Dictionary:
+	if amount <= 0:
+		return {"ok": false, "error": "Healing amount must be positive"}
+
+	var healing_applied: int = min(amount, _max_hp - _current_hp)
+	if healing_applied <= 0:
+		return {"ok": false, "error": "Healing would not increase Current HP"}
+
+	_current_hp += healing_applied
+	health_changed.emit(_current_hp, _max_hp)
+	return {"ok": true, "error": ""}
 
 
 ## Places the player on grid.start_cell. Returns {"ok": bool, "error": String}.
