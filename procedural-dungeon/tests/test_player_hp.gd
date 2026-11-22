@@ -133,8 +133,215 @@ func test_healing_at_full_hp_fails_without_state_or_signal_changes() -> String:
 	return message
 
 
+func test_max_hp_only_effect_changes_only_max_hp() -> String:
+	var player := _player_at(80, 100)
+	var events := _connect_hp_events(player)
+
+	var result: Dictionary = player.set_max_hp_effects({
+		"helmet_instance_1": _max_hp_effect(20, "increase_max_only"),
+	})
+	var message := ""
+	if not result["ok"] or result["error"] != "":
+		message = "valid Max HP effect should succeed"
+	elif player.get_current_hp() != 80 or player.get_max_hp() != 120:
+		message = "max-only effect should leave Current HP unchanged"
+	elif events["health"] != [] or events["max"] != [120]:
+		message = "max-only effect should emit only max_hp_changed"
+
+	player.free()
+	return message
+
+
+func test_max_hp_and_current_effect_changes_both_values() -> String:
+	var player := _player_at(80, 100)
+	var events := _connect_hp_events(player)
+
+	var result: Dictionary = player.set_max_hp_effects({
+		"armor_instance_1": _max_hp_effect(20, "increase_max_and_current"),
+	})
+	var message := ""
+	if not result["ok"]:
+		message = "valid Max HP and Current HP effect should succeed"
+	elif player.get_current_hp() != 100 or player.get_max_hp() != 120:
+		message = "effect should increase both HP values"
+	elif events["max"] != [120] or events["health"] != [[100, 120]]:
+		message = "effect should emit updated signal payloads"
+
+	player.free()
+	return message
+
+
+func test_removing_max_hp_effect_does_not_heal_and_clamps_only_when_needed() -> String:
+	var player := _player_at(60, 100)
+	var events := _connect_hp_events(player)
+	var effect := _max_hp_effect(20, "increase_max_and_current")
+	player.set_max_hp_effects({"armor_instance_1": effect})
+	events["health"].clear()
+	events["max"].clear()
+
+	var result: Dictionary = player.set_max_hp_effects({})
+	var message := ""
+	if not result["ok"]:
+		message = "effect removal should succeed"
+	elif player.get_current_hp() != 80 or player.get_max_hp() != 100:
+		message = "effect removal should preserve Current HP when no clamp is needed"
+	elif events["health"] != [] or events["max"] != [100]:
+		message = "non-clamping removal should emit only max_hp_changed"
+
+	player.free()
+	return message
+
+
+func test_removing_max_hp_effect_clamps_current_hp() -> String:
+	var player := _player_at(100, 100)
+	var events := _connect_hp_events(player)
+	var effect := _max_hp_effect(20, "increase_max_and_current")
+	player.set_max_hp_effects({"armor_instance_1": effect})
+	events["health"].clear()
+	events["max"].clear()
+
+	var result: Dictionary = player.set_max_hp_effects({})
+	var message := ""
+	if not result["ok"]:
+		message = "effect removal should succeed"
+	elif player.get_current_hp() != 100 or player.get_max_hp() != 100:
+		message = "effect removal should clamp Current HP to the new Max HP"
+	elif events["max"] != [100] or events["health"] != [[100, 100]]:
+		message = "clamping removal should emit both updated signal payloads"
+
+	player.free()
+	return message
+
+
+func test_replacing_identical_effect_from_new_source_adds_current_hp() -> String:
+	var player := _player_at(50, 100)
+	var events := _connect_hp_events(player)
+	var effect := _max_hp_effect(20, "increase_max_and_current")
+	player.set_max_hp_effects({"armor_instance_1": effect})
+	events["health"].clear()
+	events["max"].clear()
+
+	var result: Dictionary = player.set_max_hp_effects({
+		"armor_instance_2": effect,
+	})
+	var message := ""
+	if not result["ok"]:
+		message = "effect replacement should succeed"
+	elif player.get_current_hp() != 90 or player.get_max_hp() != 120:
+		message = "a new source must add an identical effect's Current HP contribution"
+	elif events["max"] != [] or events["health"] != [[90, 120]]:
+		message = "replacement should publish final HP values once"
+
+	player.free()
+	return message
+
+
+func test_reapplying_same_effect_source_does_not_add_current_hp_twice() -> String:
+	var player := _player_at(50, 100)
+	var events := _connect_hp_events(player)
+	var effects_by_source := {
+		"armor_instance_1": _max_hp_effect(20, "increase_max_and_current"),
+	}
+	player.set_max_hp_effects(effects_by_source)
+	events["health"].clear()
+	events["max"].clear()
+
+	var result: Dictionary = player.set_max_hp_effects(effects_by_source)
+	var message := ""
+	if not result["ok"]:
+		message = "reapplying an active effect source should succeed"
+	elif player.get_current_hp() != 70 or player.get_max_hp() != 120:
+		message = "same-source reapplication must preserve HP values"
+	elif events["health"] != [] or events["max"] != []:
+		message = "same-source reapplication must not emit HP signals"
+
+	player.free()
+	return message
+
+
+func test_invalid_effect_preserves_state_and_emits_nothing() -> String:
+	var player := _player_at(80, 100)
+	var events := _connect_hp_events(player)
+	var valid_effect := _max_hp_effect(20, "increase_max_only")
+	player.set_max_hp_effects({"helmet_instance_1": valid_effect})
+	events["health"].clear()
+	events["max"].clear()
+
+	var invalid_effects: Array = [
+		{},
+		_max_hp_effect(0, "increase_max_only"),
+		{"type": "stat", "stat": "attack", "operation": "add", "value": 1, "hp_behavior": "increase_max_only"},
+		_max_hp_effect(1, "unsupported"),
+	]
+	var message := ""
+	for effects in invalid_effects:
+		var result: Dictionary = player.set_max_hp_effects({"invalid_source": effects})
+		if result != {"ok": false, "error": "invalid_effect"}:
+			message = "invalid effects must return invalid_effect"
+			break
+		if player.get_current_hp() != 80 or player.get_max_hp() != 120:
+			message = "invalid effects must preserve HP state"
+			break
+
+	if message.is_empty() and (events["health"] != [] or events["max"] != []):
+		message = "invalid effects must not emit HP signals"
+
+	player.free()
+	return message
+
+
+func test_reset_hp_clears_effects_and_emits_only_changed_values() -> String:
+	var player := _player_at(70, 100)
+	var events := _connect_hp_events(player)
+	player.set_max_hp_effects({
+		"armor_instance_1": _max_hp_effect(20, "increase_max_and_current"),
+	})
+	events["health"].clear()
+	events["max"].clear()
+
+	var result: Dictionary = player.reset_hp()
+	var message := ""
+	if not result["ok"]:
+		message = "reset should succeed"
+	elif player.get_current_hp() != 100 or player.get_max_hp() != 100:
+		message = "reset should restore initial HP values"
+	elif events["max"] != [100] or events["health"] != [[100, 100]]:
+		message = "reset should emit both changed HP signals"
+	else:
+		events["health"].clear()
+		events["max"].clear()
+		player.reset_hp()
+		if events["health"] != [] or events["max"] != []:
+			message = "no-op reset must not emit HP signals"
+
+	player.free()
+	return message
+
+
 func _player_at(current_hp: int, max_hp: int) -> Player:
 	var player: Player = PlayerScript.new()
 	player._current_hp = current_hp
 	player._max_hp = max_hp
 	return player
+
+
+func _max_hp_effect(value: int, hp_behavior: String) -> Dictionary:
+	return {
+		"type": "stat",
+		"stat": "max_hp",
+		"operation": "add",
+		"value": value,
+		"hp_behavior": hp_behavior,
+	}
+
+
+func _connect_hp_events(player: Player) -> Dictionary:
+	var events := {"health": [], "max": []}
+	player.health_changed.connect(
+		func(current_hp: int, max_hp: int) -> void:
+			events["health"].append([current_hp, max_hp])
+	)
+	player.max_hp_changed.connect(
+		func(max_hp: int) -> void: events["max"].append(max_hp)
+	)
+	return events

@@ -198,9 +198,7 @@ func _slots_for_amount(amount: int, definition: ItemData) -> int:
 	if amount <= 0:
 		return 0
 
-	var slots := amount / definition.max_stack
-	if amount % definition.max_stack != 0:
-		slots += 1
+	var slots := ceili(float(amount) / float(definition.max_stack))
 	return slots
 
 
@@ -296,4 +294,4 @@ func _on_run_started(_seed: int, _dungeon: Dictionary) -> void:
 	_item_counts.clear()
 	_max_slots = _INITIAL_CAPACITY
 	_capacity_upgrade_count = 0
-	_emit_inventory_changed()
+	call_deferred("_emit_inventory_changed")

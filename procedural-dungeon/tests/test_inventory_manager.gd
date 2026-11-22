@@ -184,6 +184,9 @@ func test_successful_run_start_resets_nonempty_inventory() -> void:
 
 	var result: Dictionary = run_manager.start_new_run(42, CONFIG)
 
+	var tree := Engine.get_main_loop() as SceneTree
+	await tree.process_frame
+
 	check(result["ok"], "run should start: %s" % result["error"])
 	check_eq(inventory_manager.get_items(), [], "successful run reset")
 	check_eq(inventory_manager.get_max_slots(), 12, "capacity after run reset")
