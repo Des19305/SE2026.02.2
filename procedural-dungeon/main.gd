@@ -9,6 +9,11 @@ const PlayerScript := preload("res://scenes/player/player.gd")
 const PlayerRunResetScript := preload(
 	"res://scripts/run_management/player_run_reset.gd"
 )
+const HUDScene := preload("res://scenes/hud/hud.tscn")
+const DungeonGridScript := preload("res://scenes/dungeon/dungeon_grid.gd")
+const DungeonRendererScript := preload(
+	"res://scenes/dungeon/dungeon_renderer.gd"
+)
 
 var run_manager
 var item_database: ItemDatabase
@@ -16,6 +21,19 @@ var player: Player
 var inventory_manager: InventoryManager
 var equipment_manager: EquipmentManager
 var player_run_reset: PlayerRunReset
+var hud
+var dungeon_grid: DungeonGrid
+var dungeon_renderer: DungeonRenderer
+var dungeon_camera: Camera2D
+
+const STARTUP_RUN_CONFIG := {
+	"width": 50,
+	"height": 50,
+	"min_rooms": 8,
+	"max_rooms": 12,
+	"min_room_size": 5,
+	"max_room_size": 10,
+}
 
 
 func _ready() -> void:
@@ -23,8 +41,16 @@ func _ready() -> void:
 	add_child(run_manager)
 
 	item_database = ItemDatabaseScript.new()
+
+	dungeon_renderer = DungeonRendererScript.new()
+	add_child(dungeon_renderer)
+
+	dungeon_camera = Camera2D.new()
+	add_child(dungeon_camera)
+	dungeon_camera.make_current()
+
 	player = PlayerScript.new()
-	add_child(player)
+	dungeon_renderer.add_child(player)
 
 	inventory_manager = InventoryManagerScript.new(item_database, run_manager)
 	equipment_manager = EquipmentManagerScript.new(
@@ -34,6 +60,48 @@ func _ready() -> void:
 		player
 	)
 	player_run_reset = PlayerRunResetScript.new(player, run_manager)
+	hud = HUDScene.instantiate()
+	add_child(hud)
+	if hud is HUD:
+		hud.setup(player, equipment_manager, inventory_manager, run_manager)
+
+	run_manager.run_started.connect(_on_run_started)
+	start_run(42, STARTUP_RUN_CONFIG)
+
+
+func _on_run_started(_seed: int, dungeon: Dictionary) -> void:
+	var conversion: Dictionary = DungeonGridScript.from_dungeon(dungeon)
+	if not conversion["ok"]:
+		return
+
+	var new_grid: DungeonGrid = conversion["grid"]
+	var player_setup: Dictionary = player.setup(new_grid)
+	if not player_setup["ok"]:
+		return
+
+	dungeon_grid = new_grid
+	dungeon_renderer.setup(new_grid)
+	_frame_camera(new_grid)
+
+
+func _frame_camera(grid: DungeonGrid) -> void:
+	if dungeon_camera == null:
+		return
+
+	var dungeon_width: float = grid.width * DungeonGrid.CELL_SIZE
+	var dungeon_height: float = grid.height * DungeonGrid.CELL_SIZE
+	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
+	var padding := 1.10
+	var scale_x := viewport_size.x / (dungeon_width * padding)
+	var scale_y := viewport_size.y / (dungeon_height * padding)
+	var zoom_scale := minf(scale_x, scale_y)
+	zoom_scale = maxf(zoom_scale, 0.01)
+
+	dungeon_camera.position = Vector2(
+		dungeon_width * 0.5,
+		dungeon_height * 0.5
+	)
+	dungeon_camera.zoom = Vector2(zoom_scale, zoom_scale)
 
 
 func start_run(run_seed: int, config: Dictionary) -> Dictionary:
