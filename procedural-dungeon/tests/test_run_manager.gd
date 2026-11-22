@@ -4,6 +4,7 @@ extends "res://tests/test_case.gd"
 ## files written) so the start_new_run refactoring can be checked against them.
 
 const RunManager := preload("res://scripts/run_management/run_manager.gd")
+const DungeonGenerator := preload("res://scripts/generation/dungeon_generator.gd")
 
 const CONFIG := {
 	"width": 50,
@@ -204,7 +205,71 @@ func test_storage_failure_blocks_run_start() -> void:
 	check_eq(started_events.size(), 0, "run_started count")
 
 
+func test_failed_last_run_write_leaves_no_run_record() -> void:
+	# Review on PR #6 (P2-1): the run record was kept when last_run.json failed.
+	# A folder named last_run.json makes that write fail.
+	DirAccess.make_dir_recursive_absolute(records_dir.path_join("last_run.json"))
+	var result: Dictionary = manager.start_new_run(8, CONFIG)
+	check(not result["ok"], "start must fail when last_run.json cannot be written")
+	check(result["error"].begins_with("Cannot save run record"), "error was: %s" % result["error"])
+	check_eq(Array(DirAccess.get_files_at(records_dir)), [], "files left in the records folder")
+	check(manager.current_run.is_empty(), "current_run must stay empty")
+	check(manager.last_run.is_empty(), "last_run must stay empty")
+	check_eq(started_events.size(), 0, "run_started count")
+
+
+func test_failed_end_run_write_keeps_run_in_progress() -> void:
+	# Review on PR #6 (P2-2): end_run ignored a failed update and still ended the run.
+	# A folder in place of the run record file makes the update fail.
+	manager.start_new_run(5, CONFIG)
+	var record_path := records_dir.path_join(manager.current_run["run_id"] + ".json")
+	DirAccess.remove_absolute(record_path)
+	DirAccess.make_dir_recursive_absolute(record_path)
+	var result := _end_run(false, "player died")
+	check(not result.get("ok", true), "end_run must report the failed write")
+	check(String(result.get("error", "")).begins_with("Cannot save run record"), "error was: %s" % result.get("error", ""))
+	check_eq(manager.current_run.get("status", ""), "in_progress", "run must stay in progress")
+	check_eq(ended_events, [], "run_ended must not be emitted")
+
+
+func test_end_run_can_be_retried_after_failed_write() -> void:
+	manager.start_new_run(5, CONFIG)
+	var run_id: String = manager.current_run["run_id"]
+	var record_path := records_dir.path_join(run_id + ".json")
+	DirAccess.remove_absolute(record_path)
+	DirAccess.make_dir_recursive_absolute(record_path)
+	_end_run(false, "player died")
+	DirAccess.remove_absolute(record_path)
+	var result := _end_run(false, "player died")
+	check(result.get("ok", false), "second end_run should succeed: %s" % result.get("error", ""))
+	var saved: Variant = JSON.parse_string(FileAccess.get_file_as_string(record_path))
+	check(saved is Dictionary and saved.get("status", "") == "completed", "stored record: %s" % [saved])
+	check(manager.current_run.is_empty(), "current_run cleared")
+	check_eq(ended_events, [[false, "player died"]], "run_ended emitted once")
+
+
+func test_end_run_without_run_reports_error() -> void:
+	var result := _end_run(true, "nothing")
+	check(not result.get("ok", true), "end_run without a run must fail")
+	check_eq(result.get("error", ""), "No run in progress", "error")
+	check_eq(ended_events, [], "run_ended must not be emitted")
+
+
+func test_run_record_uses_generator_version() -> void:
+	manager.start_new_run(42, CONFIG)
+	check_eq(manager.current_run["generation_version"], DungeonGenerator.GENERATOR_VERSION, "generation_version")
+
+
 # --- helpers ----------------------------------------------------------------
+
+## end_run returns {ok, error}. Before the fix it returned nothing.
+func _end_run(won: bool, reason: String) -> Dictionary:
+	var result: Variant = manager.end_run(won, reason)
+	if not result is Dictionary:
+		check(false, "end_run must return {ok, error}, got <%s>" % [result])
+		return {}
+	return result
+
 
 func _expect_rejected(result: Dictionary, expected_error: String) -> void:
 	check(not result["ok"], "expected rejection: %s" % expected_error)
