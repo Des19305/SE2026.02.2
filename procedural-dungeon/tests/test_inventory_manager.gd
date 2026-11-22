@@ -216,6 +216,88 @@ func test_failed_run_start_does_not_reset_inventory() -> void:
 	check_eq(inventory_events.size(), event_count, "failed start must not emit")
 
 
+func test_successful_first_capacity_upgrade() -> void:
+	var event_count := inventory_events.size()
+	var before_items: Array = inventory_manager.get_items()
+
+	var result: Dictionary = inventory_manager.upgrade_capacity()
+
+	check_eq(result, {"ok": true, "error": ""}, "first upgrade result")
+	check_eq(inventory_manager.get_max_slots(), 14, "capacity after first upgrade")
+	check_eq(inventory_manager.get_items(), before_items, "first upgrade preserves items")
+	check_eq(inventory_events.size(), event_count + 1, "first upgrade emits once")
+
+
+func test_capacity_upgrade_progression_and_limit() -> void:
+	check(inventory_manager.upgrade_capacity()["ok"], "first upgrade succeeds")
+	check_eq(inventory_manager.get_max_slots(), 14, "capacity is 14 after first upgrade")
+	check(inventory_manager.upgrade_capacity()["ok"], "second upgrade succeeds")
+	check_eq(inventory_manager.get_max_slots(), 16, "capacity is 16 after second upgrade")
+
+	var before_items: Array = inventory_manager.get_items()
+	var before_capacity: int = inventory_manager.get_max_slots()
+	var event_count := inventory_events.size()
+	var third_result: Dictionary = inventory_manager.upgrade_capacity()
+
+	check(not third_result["ok"], "third upgrade fails")
+	check(third_result["error"].contains("limit"), "third upgrade failure is descriptive")
+	check_eq(inventory_manager.get_max_slots(), before_capacity, "third upgrade preserves capacity")
+	check_eq(inventory_manager.get_items(), before_items, "third upgrade preserves items")
+	check_eq(inventory_events.size(), event_count, "third upgrade does not emit")
+
+
+func test_capacity_upgrade_preserves_items_and_observer_capacity() -> void:
+	check(inventory_manager.add_item("potion", 5), "add potion stacks")
+	check(inventory_manager.add_item("sword", 3), "add swords")
+	var before_items: Array = inventory_manager.get_items()
+	inventory_events.clear()
+	var observed_capacities: Array[int] = []
+	inventory_manager.inventory_changed.connect(
+		func(items: Array) -> void:
+			observed_capacities.append(inventory_manager.get_max_slots())
+	)
+
+	var result: Dictionary = inventory_manager.upgrade_capacity()
+
+	check_eq(result, {"ok": true, "error": ""}, "upgrade with items succeeds")
+	check_eq(inventory_manager.get_items(), before_items, "upgrade does not change item quantities")
+	check_eq(inventory_manager.get_used_slots(), 5, "upgrade does not change used slots")
+	check_eq(inventory_manager.get_max_slots(), 14, "upgraded capacity")
+	check_eq(inventory_events.size(), 1, "successful upgrade emits once")
+	check_eq(inventory_events.back(), before_items, "upgrade emits unchanged item snapshot")
+	check_eq(observed_capacities, [14], "observer reads updated capacity")
+
+
+func test_successful_run_start_resets_capacity_upgrade_count() -> void:
+	check(inventory_manager.upgrade_capacity()["ok"], "upgrade before run")
+	check(inventory_manager.upgrade_capacity()["ok"], "second upgrade before run")
+	check_eq(inventory_manager.get_max_slots(), 16, "capacity before reset")
+
+	var result: Dictionary = run_manager.start_new_run(42, CONFIG)
+
+	var tree := Engine.get_main_loop() as SceneTree
+	await tree.process_frame
+
+	check(result["ok"], "run should start: %s" % result["error"])
+	check_eq(inventory_manager.get_max_slots(), 12, "run reset restores base capacity")
+	check(inventory_manager.upgrade_capacity()["ok"], "upgrade is available after reset")
+	check_eq(inventory_manager.get_max_slots(), 14, "count reset allows first upgrade again")
+
+
+func test_failed_run_start_preserves_capacity_and_upgrade_count() -> void:
+	check(inventory_manager.upgrade_capacity()["ok"], "upgrade before failed run")
+	check_eq(inventory_manager.get_max_slots(), 14, "capacity before failed run")
+	var invalid_config := CONFIG.duplicate()
+	invalid_config["width"] = 201
+
+	var result: Dictionary = run_manager.start_new_run(42, invalid_config)
+
+	check(not result["ok"], "invalid run should fail")
+	check_eq(inventory_manager.get_max_slots(), 14, "failed run preserves capacity")
+	check(inventory_manager.upgrade_capacity()["ok"], "second upgrade remains available")
+	check_eq(inventory_manager.get_max_slots(), 16, "failed run preserves upgrade count")
+
+
 func _register_definition(
 	item_id: String,
 	item_category: String,

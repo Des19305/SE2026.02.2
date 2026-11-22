@@ -5,6 +5,8 @@ signal inventory_changed(items: Array)
 signal item_used(item_id: String, result: Dictionary)
 
 const _INITIAL_CAPACITY := 12
+const _UPGRADE_AMOUNT := 2
+const _MAX_CAPACITY_UPGRADES := 2
 
 var _item_database: ItemDatabase
 var _run_manager: Node
@@ -192,6 +194,19 @@ func get_used_slots() -> int:
 		var definition: ItemData = lookup["definition"]
 		used_slots += _slots_for_amount(_item_counts[item_id], definition)
 	return used_slots
+
+
+func upgrade_capacity() -> Dictionary:
+	if _capacity_upgrade_count >= _MAX_CAPACITY_UPGRADES:
+		return {
+			"ok": false,
+			"error": "Inventory capacity upgrade limit reached",
+		}
+
+	_max_slots += _UPGRADE_AMOUNT
+	_capacity_upgrade_count += 1
+	_emit_inventory_changed()
+	return {"ok": true, "error": ""}
 
 
 func _slots_for_amount(amount: int, definition: ItemData) -> int:
