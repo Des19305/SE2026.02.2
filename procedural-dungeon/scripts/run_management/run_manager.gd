@@ -14,7 +14,9 @@ const RunRecordRepository := preload("res://scripts/run_management/run_record_re
 
 const RECORD_RETENTION_DAYS := 70
 const SECONDS_PER_DAY := 86400
-const GENERATION_VERSION := 1
+## Same value as the generator, so a run record always names the algorithm
+## that produced its layout (review on PR #6: one source for the version).
+const GENERATION_VERSION := DungeonGenerator.GENERATOR_VERSION
 
 var records_dir := "user://runs"
 ## Returns the current Unix time in seconds; replaceable in tests.
