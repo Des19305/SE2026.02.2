@@ -13,21 +13,28 @@ func _init(dir: String) -> void:
 
 
 ## Prunes expired records, then writes the new record and last_run.json.
+## All or nothing: if last_run.json cannot be written, the new record file is
+## removed again so no half-saved run is left behind.
 ## Returns an empty string on success, otherwise an error message.
 func save_new_run(record: Dictionary) -> String:
 	var err := DirAccess.make_dir_recursive_absolute(records_dir)
 	if err != OK:
 		return "Cannot save run record: %s" % error_string(err)
 	prune_expired(record["created_at"])
-	var write_error := _write(record["run_id"] + ".json", record)
+	var record_file: String = record["run_id"] + ".json"
+	var write_error := _write(record_file, record)
 	if write_error != "":
 		return write_error
-	return _write(LAST_RUN_FILE, record)
+	write_error = _write(LAST_RUN_FILE, record)
+	if write_error != "":
+		DirAccess.remove_absolute(records_dir.path_join(record_file))
+	return write_error
 
 
-## Overwrites an existing run record. Best-effort: a failed write is ignored.
-func update(record: Dictionary) -> void:
-	_write(record["run_id"] + ".json", record)
+## Overwrites an existing run record.
+## Returns an empty string on success, otherwise an error message.
+func update(record: Dictionary) -> String:
+	return _write(record["run_id"] + ".json", record)
 
 
 func prune_expired(now: int) -> void:
