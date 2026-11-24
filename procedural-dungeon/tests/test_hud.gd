@@ -112,7 +112,7 @@ func test_main_initializes_scripted_hud_instance() -> void:
 			check_eq(state["current_hp"], 100, "Main HUD starts with Current HP")
 			check_eq(state["max_hp"], 100, "Main HUD starts with Max HP")
 			check_eq(state["inventory_capacity"], 12, "Main HUD starts with base Inventory capacity")
-			check_eq(state["seed"], "—", "Main HUD starts with seed placeholder")
+			check_eq(state["seed"], "42", "Main HUD starts with successful startup seed")
 
 	main.queue_free()
 	await tree.process_frame
