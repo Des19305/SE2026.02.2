@@ -6,6 +6,7 @@ extends Node2D
 signal moved(cell: Vector2i)
 signal health_changed(current_hp: int, max_hp: int)
 signal max_hp_changed(max_hp: int)
+signal combat_state_changed(is_in_combat: bool)
 
 const MOVE_INTERVAL: float = 0.12  # seconds between steps while a key is held
 const BODY_COLOR := Color("#ebcb8b")
@@ -17,6 +18,7 @@ var _cooldown: float = 0.0
 var _current_hp: int = _INITIAL_MAX_HP
 var _max_hp: int = _INITIAL_MAX_HP
 var _max_hp_effects: Dictionary = {}
+var _in_combat: bool = false
 
 
 func get_current_hp() -> int:
@@ -25,6 +27,24 @@ func get_current_hp() -> int:
 
 func get_max_hp() -> int:
 	return _max_hp
+
+
+func start_combat() -> void:
+	if _in_combat:
+		return
+	_in_combat = true
+	combat_state_changed.emit(true)
+
+
+func end_combat() -> void:
+	if not _in_combat:
+		return
+	_in_combat = false
+	combat_state_changed.emit(false)
+
+
+func is_in_combat() -> bool:
+	return _in_combat
 
 
 func heal(amount: int) -> Dictionary:
@@ -79,6 +99,7 @@ func validate_max_hp_effects(effects_by_source: Dictionary) -> Dictionary:
 
 
 func reset_hp(defer_signals: bool = false) -> Dictionary:
+	end_combat()
 	var previous_current_hp := _current_hp
 	var previous_max_hp := _max_hp
 	_max_hp_effects.clear()

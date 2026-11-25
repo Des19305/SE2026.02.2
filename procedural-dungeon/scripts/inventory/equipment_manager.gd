@@ -65,6 +65,9 @@ func get_slot_type(slot_id: String) -> String:
 
 
 func equip_item(item_id: String, slot: String) -> Dictionary:
+	if _player.is_in_combat():
+		return _failure("in_combat")
+
 	var lookup: Dictionary = _item_database.get_item_definition(item_id)
 	if not lookup["ok"]:
 		return _failure("invalid_item")
@@ -127,6 +130,9 @@ func equip_item(item_id: String, slot: String) -> Dictionary:
 
 
 func unequip_item(slot: String) -> Dictionary:
+	if _player.is_in_combat():
+		return _failure("in_combat")
+
 	if not _slot_types.has(slot):
 		return _failure("invalid_slot")
 
@@ -159,6 +165,9 @@ func _commit_equipment_change(
 	additions: Dictionary,
 	resulting_equipment: Dictionary
 ) -> Dictionary:
+	if _player.is_in_combat():
+		return _failure("in_combat")
+
 	var preflight: Dictionary = _inventory_manager.preflight_transfer_batch(
 		removals,
 		additions

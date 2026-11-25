@@ -3,6 +3,42 @@ extends RefCounted
 const PlayerScript := preload("res://scenes/player/player.gd")
 
 
+func test_combat_state_contract() -> String:
+	var player: Player = PlayerScript.new()
+	var events: Array[bool] = []
+	player.combat_state_changed.connect(
+		func(is_in_combat: bool) -> void:
+			events.append(is_in_combat)
+	)
+
+	var message := ""
+	if player.is_in_combat():
+		message = "Player should start outside Combat"
+	else:
+		player.start_combat()
+		if not player.is_in_combat():
+			message = "start_combat should activate Combat"
+		elif events != [true]:
+			message = "start_combat should emit one true transition"
+		else:
+			player.start_combat()
+			if events != [true]:
+				message = "repeated start_combat must not emit"
+			else:
+				player.end_combat()
+				if player.is_in_combat():
+					message = "end_combat should deactivate Combat"
+				elif events != [true, false]:
+					message = "end_combat should emit one false transition"
+				else:
+					player.end_combat()
+					if events != [true, false]:
+						message = "repeated end_combat must not emit"
+
+	player.free()
+	return message
+
+
 func test_initial_hp_values_and_no_initial_signals() -> String:
 	var player: Player = PlayerScript.new()
 	var health_events: Array = []

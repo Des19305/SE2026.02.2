@@ -100,6 +100,113 @@ func test_initial_slots_and_equipment_snapshot() -> void:
 	check_eq(equipment_manager.get_equipment(), expected, "snapshot must not expose state")
 
 
+func test_combat_rejects_empty_slot_replacement_and_unequip_equipment() -> void:
+	check(inventory_manager.add_item("sword", 2), "add swords")
+	check(inventory_manager.add_item("shield"), "add shield")
+	check(equipment_manager.equip_item("sword", "weapon_1")["ok"], "equip initial sword")
+
+	var before_equipment: Dictionary = equipment_manager.get_equipment().duplicate()
+	var before_sword: int = inventory_manager.get_item_count("sword")
+	var before_shield: int = inventory_manager.get_item_count("shield")
+	var before_capacity: int = inventory_manager.get_max_slots()
+	inventory_events.clear()
+	equipment_events.clear()
+
+	player.start_combat()
+
+	check_eq(
+		equipment_manager.equip_item("sword", "weapon_2"),
+		_error("in_combat"),
+		"empty Equipment slot is blocked"
+	)
+	check_eq(
+		equipment_manager.equip_item("shield", "weapon_1"),
+		_error("in_combat"),
+		"Equipment replacement is blocked"
+	)
+	check_eq(
+		equipment_manager.equip_item("sword", "weapon_1"),
+		_error("in_combat"),
+		"same-item Equipment equip is blocked"
+	)
+	check_eq(
+		equipment_manager.unequip_item("weapon_1"),
+		_error("in_combat"),
+		"Equipment unequip is blocked"
+	)
+
+	check_eq(equipment_manager.get_equipment(), before_equipment, "Combat preserves equipped IDs")
+	check_eq(inventory_manager.get_item_count("sword"), before_sword, "Combat preserves sword count")
+	check_eq(inventory_manager.get_item_count("shield"), before_shield, "Combat preserves shield count")
+	check_eq(inventory_manager.get_max_slots(), before_capacity, "Combat preserves capacity")
+	check_eq(inventory_events.size(), 0, "Combat rejects emit no Inventory mutation")
+	check_eq(equipment_events.size(), 0, "Combat rejects emit no Equipment mutation")
+
+
+func test_combat_rejects_accessory_replacement_unequip_and_dynamic_slot() -> void:
+	check(inventory_manager.add_item("old_ring"), "add old accessory")
+	check(inventory_manager.add_item("stack_ring"), "add replacement accessory")
+	check(equipment_manager.equip_item("old_ring", "accessory_1")["ok"], "equip old accessory")
+	check(equipment_manager.add_slot("extra_accessory", "accessory")["ok"], "add dynamic accessory slot")
+
+	var before_equipment: Dictionary = equipment_manager.get_equipment().duplicate()
+	var before_old_ring: int = inventory_manager.get_item_count("old_ring")
+	var before_stack_ring: int = inventory_manager.get_item_count("stack_ring")
+	var before_capacity: int = inventory_manager.get_max_slots()
+	inventory_events.clear()
+	equipment_events.clear()
+
+	player.start_combat()
+
+	check_eq(
+		equipment_manager.equip_item("stack_ring", "accessory_1"),
+		_error("in_combat"),
+		"Accessory replacement is blocked"
+	)
+	check_eq(
+		equipment_manager.unequip_item("accessory_1"),
+		_error("in_combat"),
+		"Accessory unequip is blocked"
+	)
+	check_eq(
+		equipment_manager.equip_item("old_ring", "accessory_1"),
+		_error("in_combat"),
+		"same-item Accessory equip is blocked"
+	)
+	check_eq(
+		equipment_manager.equip_item("stack_ring", "extra_accessory"),
+		_error("in_combat"),
+		"dynamic Accessory slot is protected"
+	)
+
+	check_eq(equipment_manager.get_equipment(), before_equipment, "Combat preserves accessory IDs")
+	check_eq(inventory_manager.get_item_count("old_ring"), before_old_ring, "Combat preserves old accessory count")
+	check_eq(inventory_manager.get_item_count("stack_ring"), before_stack_ring, "Combat preserves replacement count")
+	check_eq(inventory_manager.get_max_slots(), before_capacity, "Combat preserves capacity")
+	check_eq(inventory_events.size(), 0, "Accessory rejects emit no Inventory mutation")
+	check_eq(equipment_events.size(), 0, "Accessory rejects emit no Equipment mutation")
+
+
+func test_end_combat_restores_equipment_and_accessory_operations() -> void:
+	check(inventory_manager.add_item("sword"), "add sword")
+	check(inventory_manager.add_item("shield"), "add shield")
+	check(inventory_manager.add_item("old_ring"), "add accessory")
+
+	player.start_combat()
+	check_eq(
+		equipment_manager.equip_item("sword", "weapon_1"),
+		_error("in_combat"),
+		"Combat rejects initial equip"
+	)
+	player.end_combat()
+
+	check(equipment_manager.equip_item("sword", "weapon_1")["ok"], "equip succeeds after Combat")
+	check(equipment_manager.equip_item("shield", "weapon_1")["ok"], "replacement succeeds after Combat")
+	check(equipment_manager.unequip_item("weapon_1")["ok"], "unequip succeeds after Combat")
+	check(equipment_manager.equip_item("old_ring", "accessory_1")["ok"], "Accessory equip succeeds after Combat")
+	check(equipment_manager.unequip_item("accessory_1")["ok"], "Accessory unequip succeeds after Combat")
+
+
 func test_dynamic_slots_validate_and_emit_only_when_added() -> void:
 	var result: Dictionary = equipment_manager.add_slot("trinket_1", "trinket")
 

@@ -10,7 +10,19 @@ Equipment Manager cung cấp các API:
 - `unequip_item(slot: String) -> Dictionary`
 - `get_equipment() -> Dictionary`
 
+Player owns the authoritative Combat state and provides:
+
+- `start_combat()`
+- `end_combat()`
+- `is_in_combat() -> bool`
+- `combat_state_changed(is_in_combat: bool)`
+
+Future Combat gameplay must call `start_combat()` and `end_combat()` explicitly.
+Phase 7 does not implement Enemy, encounter detection, timers, or automatic Combat transitions.
+
 Equipment Manager chịu trách nhiệm quản lý equipment state và đảm bảo các thao tác equip, unequip, replace được thực hiện an toàn.
+
+While `Player.is_in_combat()` is true, `equip_item()` and `unequip_item()` must return `{"ok": false, "error": "in_combat"}` before changing Equipment, Inventory, or Player effects. This restriction covers Equipment, Accessories, replacements, empty slots, dynamic slots, and same-item equip calls.
 
 Chi tiết cấu trúc dữ liệu trả về của `get_equipment()` chưa chốt, không tự ý định nghĩa trong giai đoạn cập nhật contract.
 

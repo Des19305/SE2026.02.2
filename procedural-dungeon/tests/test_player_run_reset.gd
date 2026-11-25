@@ -60,6 +60,33 @@ func test_failed_run_start_preserves_player_hp_and_effects() -> void:
 	check_eq(player.get_max_hp(), 120, "failed run preserves Max HP effects")
 
 
+func test_successful_run_start_ends_combat() -> void:
+	var combat_events: Array[bool] = []
+	player.combat_state_changed.connect(
+		func(is_in_combat: bool) -> void:
+			combat_events.append(is_in_combat)
+	)
+	player.start_combat()
+	check(player.is_in_combat(), "Player starts Combat")
+
+	var result: Dictionary = run_manager.start_new_run(42, CONFIG)
+
+	check(result["ok"], "run should start: %s" % result["error"])
+	check(not player.is_in_combat(), "successful run reset ends Combat")
+	check_eq(combat_events, [true, false], "run reset emits one Combat exit transition")
+
+
+func test_failed_run_start_preserves_combat_state() -> void:
+	player.start_combat()
+	var invalid_config := CONFIG.duplicate()
+	invalid_config["width"] = 201
+
+	var result: Dictionary = run_manager.start_new_run(42, invalid_config)
+
+	check(not result["ok"], "invalid run should fail")
+	check(player.is_in_combat(), "failed run preserves Combat state")
+
+
 func _max_hp_effect(value: int, hp_behavior: String) -> Dictionary:
 	return {
 		"type": "stat",

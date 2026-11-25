@@ -558,6 +558,8 @@ The Equipment Manager validates that the item exists, can be equipped, and is co
 
 Equip, unequip, replace, and their Inventory transfers must be atomic. If an operation fails, Inventory and Equipment must remain in their pre-operation states; no item may be lost or left in a partially changed state. A replaced item must be returned to Inventory as part of a successful operation. If a safe transfer or replacement cannot be completed, the operation fails without partial mutation. The modules must use their public interfaces; no transaction API or direct internal-state access is defined by this contract.
 
+Player owns an explicit Combat-state contract: `start_combat()`, `end_combat()`, `is_in_combat()`, and `combat_state_changed(is_in_combat: bool)`. Future Combat gameplay must control it explicitly. EquipmentManager enforces an `in_combat` failure in `equip_item()` and `unequip_item()`, covering replacement, Accessories, dynamic slots, and same-item equip calls. Combat detection and encounter lifecycle are not implemented by EquipmentManager.
+
 #### Signals
 
 - `equipment_changed`
