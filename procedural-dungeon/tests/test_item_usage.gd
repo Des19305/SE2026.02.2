@@ -231,20 +231,25 @@ func test_other_player_heal_failure_maps_to_effect_failed() -> void:
 	_assert_item_used("potion", result)
 
 
-func test_reentrant_inventory_removal_is_reported_without_claiming_consumption() -> void:
+func test_reentrant_inventory_removal_no_longer_reports_item_not_owned() -> void:
 	player = _player_at(70)
 	check(inventory_manager.add_item("potion", 1), "initial potion add")
 	inventory_events.clear()
 	player.health_changed.connect(
 		func(_current_hp: int, _max_hp: int) -> void:
-			check(inventory_manager.remove_item("potion", 1), "reentrant removal should succeed")
+			check(not inventory_manager.remove_item("potion", 1), "item is already consumed")
 	)
 
 	var result: Dictionary = inventory_manager.use_item("potion", player)
 
-	_assert_failure(result, "item_not_owned", "potion")
-	check_eq(player.get_current_hp(), 95, "healing has already succeeded before reentrant removal")
-	check_eq(inventory_manager.get_item_count("potion"), 0, "reentrant callback removed the item")
+	check_eq(result, {
+		"ok": true,
+		"error": "",
+		"item_id": "potion",
+		"consumed": true,
+	}, "healing and consumption are now consistent")
+	check_eq(player.get_current_hp(), 95, "healing succeeds once")
+	check_eq(inventory_manager.get_item_count("potion"), 0, "item is consumed before healing")
 	check_eq(inventory_events.size(), 1, "only the successful reentrant removal emits")
 	check_eq(inventory_events[0], [], "reentrant removal snapshot")
 	_assert_item_used("potion", result)

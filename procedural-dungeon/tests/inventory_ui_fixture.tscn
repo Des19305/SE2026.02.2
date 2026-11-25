@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/inventory_ui_fixture.gd" id="1_fixture"]
+
+[node name="InventoryUITestFixture" type="Node"]
+script = ExtResource("1_fixture")

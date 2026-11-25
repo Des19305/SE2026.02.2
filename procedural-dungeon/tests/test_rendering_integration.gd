@@ -44,6 +44,46 @@ func test_startup_rendering_sets_valid_grid_and_player_spawn() -> void:
 		"Player position should match its start-cell center"
 	)
 	check(_find_camera(main) != null, "Main should own a Camera2D")
+	check(main.inventory_ui != null, "Main should own one Inventory UI")
+	check(main.hotbar_ui != null, "Main should own one Hotbar UI")
+	check(main.ui_layer != null, "Main should own the production UI CanvasLayer")
+	if main.inventory_ui != null:
+		check(
+			main.inventory_ui.inventory_manager == main.inventory_manager,
+			"Inventory UI should reuse Main's InventoryManager"
+		)
+		check(
+			main.inventory_ui.item_database == main.item_database,
+			"Inventory UI should reuse Main's ItemDatabase"
+		)
+		check(
+			main.inventory_ui.player == main.player,
+			"Inventory UI should reuse Main's Player"
+		)
+	if main.hotbar_ui != null:
+		check(
+			main.hotbar_ui.inventory_manager == main.inventory_manager,
+			"Hotbar should reuse Main's InventoryManager"
+		)
+		check(
+			main.hotbar_ui.item_database == main.item_database,
+			"Hotbar should reuse Main's ItemDatabase"
+		)
+		check(
+			main.hotbar_ui.player == main.player,
+			"Hotbar should reuse Main's Player"
+		)
+		check(
+			main.hotbar_ui.get_parent() != main.inventory_ui,
+			"Hotbar should not be a child whose visibility depends on Inventory UI"
+		)
+	check_eq(
+		main.ui_layer.get_child_count(),
+		2,
+		"Main UI layer should contain exactly Inventory and Hotbar instances"
+	)
+	check(main.ui_layer.get_children().has(main.inventory_ui), "UI layer should own Inventory UI")
+	check(main.ui_layer.get_children().has(main.hotbar_ui), "UI layer should own Hotbar UI")
 
 	await _remove_fixture(fixture)
 
@@ -239,6 +279,53 @@ func test_hud_remains_compatible_after_rendering_start() -> void:
 		check_eq(state["max_hp"], 100, "HUD should show initial Max HP")
 		check_eq(state["inventory_capacity"], 12, "HUD should show base Inventory capacity")
 		check(state["seed"] != "—", "HUD should receive the successful startup seed")
+
+	await _remove_fixture(fixture)
+
+
+func test_main_inventory_e_input_opens_once() -> void:
+	var fixture := await _create_fixture()
+	var main: Main = fixture["main"]
+	if main == null:
+		await _remove_fixture(fixture)
+		return
+	await _process_frame()
+
+	check(main.inventory_ui != null, "Main should have a production Inventory UI")
+	if main.inventory_ui == null:
+		await _remove_fixture(fixture)
+		return
+
+	main.get_tree().paused = false
+	check(not main.inventory_ui.is_inventory_open(), "Inventory should start closed")
+	check(not main.inventory_ui.visible, "Inventory should start hidden")
+
+	var event := InputEventKey.new()
+	event.pressed = true
+	event.echo = false
+	event.keycode = KEY_E
+	main.get_viewport().push_input(event)
+	await _process_frame()
+
+	check(main.inventory_ui.is_inventory_open(), "viewport E event should open Main Inventory")
+	check(main.inventory_ui.visible, "viewport E event should show Main Inventory")
+	check(main.get_tree().paused, "viewport E event should pause gameplay")
+
+	var echo_event := event.duplicate() as InputEventKey
+	echo_event.echo = true
+	main.get_viewport().push_input(echo_event)
+	await _process_frame()
+	check(main.inventory_ui.is_inventory_open(), "echo event must not toggle Inventory twice")
+
+	var close_event := InputEventKey.new()
+	close_event.pressed = true
+	close_event.echo = false
+	close_event.keycode = KEY_E
+	main.get_viewport().push_input(close_event)
+	await _process_frame()
+	check(not main.inventory_ui.is_inventory_open(), "second physical E event should close Inventory")
+	check(not main.inventory_ui.visible, "second physical E event should hide Inventory")
+	check(not main.get_tree().paused, "second physical E event should resume gameplay")
 
 	await _remove_fixture(fixture)
 

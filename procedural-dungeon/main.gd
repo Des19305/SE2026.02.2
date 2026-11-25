@@ -14,6 +14,8 @@ const DungeonGridScript := preload("res://scenes/dungeon/dungeon_grid.gd")
 const DungeonRendererScript := preload(
 	"res://scenes/dungeon/dungeon_renderer.gd"
 )
+const InventoryUIScene := preload("res://scenes/ui/inventory_ui.tscn")
+const HotbarUIScene := preload("res://scenes/ui/hotbar_ui.tscn")
 
 var run_manager
 var item_database: ItemDatabase
@@ -25,6 +27,9 @@ var hud
 var dungeon_grid: DungeonGrid
 var dungeon_renderer: DungeonRenderer
 var dungeon_camera: Camera2D
+var inventory_ui
+var hotbar_ui
+var ui_layer: CanvasLayer
 
 const STARTUP_RUN_CONFIG := {
 	"width": 50,
@@ -66,7 +71,37 @@ func _ready() -> void:
 		hud.setup(player, equipment_manager, inventory_manager, run_manager)
 
 	run_manager.run_started.connect(_on_run_started)
+
+	ui_layer = CanvasLayer.new()
+	ui_layer.name = "InventoryAndHotbarUI"
+	add_child(ui_layer)
+
+	inventory_ui = InventoryUIScene.instantiate()
+	ui_layer.add_child(inventory_ui)
+	inventory_ui.setup(inventory_manager, item_database, player)
+
+	hotbar_ui = HotbarUIScene.instantiate()
+	ui_layer.add_child(hotbar_ui)
+	hotbar_ui.setup(inventory_manager, item_database, player)
+	inventory_ui.set_hotbar_ui(hotbar_ui)
+
 	start_run(42, STARTUP_RUN_CONFIG)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not (event is InputEventKey):
+		return
+
+	var key_event := event as InputEventKey
+	if not key_event.pressed or key_event.echo:
+		return
+	if key_event.keycode != KEY_E:
+		return
+	if inventory_ui == null:
+		return
+
+	get_viewport().set_input_as_handled()
+	inventory_ui.toggle_inventory()
 
 
 func _on_run_started(_seed: int, dungeon: Dictionary) -> void:

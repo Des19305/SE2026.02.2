@@ -3,6 +3,8 @@ extends RefCounted
 
 signal inventory_changed(items: Array)
 signal item_used(item_id: String, result: Dictionary)
+signal deferred_effect_applied(request_id: int, item_id: String, result: Dictionary)
+signal deferred_effect_failed(request_id: int, item_id: String, result: Dictionary)
 
 const _INITIAL_CAPACITY := 12
 const _UPGRADE_AMOUNT := 2
@@ -13,6 +15,11 @@ var _run_manager: Node
 var _item_counts: Dictionary = {}
 var _max_slots: int = _INITIAL_CAPACITY
 var _capacity_upgrade_count: int = 0
+var _deferred_effect_queue: Array[Dictionary] = []
+var _deferred_request_sequence: int = 0
+var _deferred_generation: int = 0
+var _deferred_flush_active: bool = false
+var _inventory_mutation_version: int = 0
 
 
 func _init(item_database: ItemDatabase, run_manager: Node) -> void:
@@ -41,6 +48,7 @@ func add_item(item_id: String, amount: int = 1) -> bool:
 		return false
 
 	_item_counts[item_id] = current_amount + amount
+	_inventory_mutation_version += 1
 	_emit_inventory_changed()
 	return true
 
@@ -63,6 +71,7 @@ func remove_item(item_id: String, amount: int = 1) -> bool:
 	else:
 		_item_counts[item_id] = updated_amount
 
+	_inventory_mutation_version += 1
 	_emit_inventory_changed()
 	return true
 
@@ -80,6 +89,7 @@ func commit_transfer_batch(removals: Dictionary, additions: Dictionary) -> bool:
 	var changed := _item_counts != final_counts
 	if changed:
 		_item_counts = final_counts
+		_inventory_mutation_version += 1
 	return changed
 
 
@@ -95,65 +105,233 @@ func use_item(item_id: String, user: Node) -> Dictionary:
 		"item_id": item_id,
 		"consumed": false,
 	}
-	var lookup: Dictionary = _item_database.get_item_definition(item_id)
-
-	if not lookup["ok"]:
-		result["error"] = "invalid_item"
-		return _finish_item_use(item_id, result)
-
-	if not is_instance_valid(user) or not (user is Player):
-		result["error"] = "invalid_user"
-		return _finish_item_use(item_id, result)
-
-	if get_item_count(item_id) <= 0:
-		result["error"] = "item_not_owned"
-		return _finish_item_use(item_id, result)
-
-	var definition: ItemData = lookup["definition"]
-	if definition.item_type != "consumable" or definition.effects.size() != 1:
-		result["error"] = "item_not_usable"
-		return _finish_item_use(item_id, result)
-
-	var effect: Variant = definition.effects[0]
-	if not (effect is Dictionary):
-		result["error"] = "item_not_usable"
-		return _finish_item_use(item_id, result)
-
-	var healing_effect: Dictionary = effect
-	if not healing_effect.has("type") or healing_effect["type"] != "heal":
-		result["error"] = "item_not_usable"
-		return _finish_item_use(item_id, result)
-
-	for key in healing_effect:
-		if key != "type" and key != "value":
-			result["error"] = "item_not_usable"
-			return _finish_item_use(item_id, result)
-
-	if not healing_effect.has("value"):
-		result["error"] = "effect_failed"
-		return _finish_item_use(item_id, result)
-
-	var healing_value: Variant = healing_effect["value"]
-	if typeof(healing_value) != TYPE_INT or healing_value <= 0:
-		result["error"] = "effect_failed"
+	var validation: Dictionary = _validate_consumable_request(item_id, user)
+	if not validation["ok"]:
+		result["error"] = validation["error"]
 		return _finish_item_use(item_id, result)
 
 	var player: Player = user
-	var current_hp := player.get_current_hp()
-	var max_hp := player.get_max_hp()
-	var heal_result: Dictionary = player.heal(healing_value)
-	if not heal_result.get("ok", false):
-		result["error"] = "hp_full" if current_hp >= max_hp else "effect_failed"
+	if player.get_current_hp() >= player.get_max_hp():
+		result["error"] = "hp_full"
 		return _finish_item_use(item_id, result)
 
-	# health_changed is synchronous; a callback can remove this item before consumption.
-	if not remove_item(item_id, 1):
+	var preflight: Dictionary = preflight_transfer_batch(
+		{item_id: 1},
+		{}
+	)
+	if not preflight["ok"]:
 		result["error"] = "item_not_owned"
 		return _finish_item_use(item_id, result)
 
-	result["ok"] = true
-	result["consumed"] = true
+	var use_generation := _deferred_generation
+	commit_transfer_batch({item_id: 1}, {})
+	var mutation_version_after_commit := _inventory_mutation_version
+
+	var healing_effect: Dictionary = validation["effect"]
+	var heal_result: Dictionary = player.heal(healing_effect["value"])
+
+	if _deferred_generation != use_generation:
+		result["ok"] = false
+		result["error"] = "run_reset"
+		result["consumed"] = true
+		return result.duplicate(true)
+
+	if heal_result.get("ok", false):
+		result["ok"] = true
+		result["consumed"] = true
+
+		if _inventory_mutation_version == mutation_version_after_commit:
+			publish_transfer_batch(true)
+		else:
+			# Public Inventory callbacks already published their own state changes.
+			pass
+
+		if _deferred_generation != use_generation:
+			result["ok"] = false
+			result["error"] = "run_reset"
+			result["consumed"] = true
+			return result.duplicate(true)
+
+		return _finish_item_use(item_id, result)
+
+	if _deferred_generation != use_generation:
+		result["error"] = "run_reset"
+		result["consumed"] = true
+		return result.duplicate(true)
+
+	var healing_error := str(heal_result.get("error", "effect_failed"))
+	result["error"] = "hp_full" if healing_error == "hp_full" or player.get_current_hp() >= player.get_max_hp() else "effect_failed"
+
+	if _inventory_mutation_version == mutation_version_after_commit:
+		var restore_preflight: Dictionary = preflight_transfer_batch(
+			{},
+			{item_id: 1}
+		)
+		if restore_preflight["ok"]:
+			commit_transfer_batch({}, {item_id: 1})
+			result["consumed"] = false
+		else:
+			result["consumed"] = true
+	else:
+		result["consumed"] = true
+
+	if _deferred_generation != use_generation:
+		result["error"] = "run_reset"
+		result["consumed"] = true
+		return result.duplicate(true)
+
 	return _finish_item_use(item_id, result)
+
+
+func queue_consumable_use(item_id: String, user: Node) -> Dictionary:
+	var validation: Dictionary = _validate_consumable_request(item_id, user)
+	if not validation["ok"]:
+		return _deferred_rejected_result(
+			item_id,
+			validation["error"]
+		)
+
+	var player: Player = user
+	if player.get_current_hp() >= player.get_max_hp():
+		return _deferred_rejected_result(item_id, "hp_full")
+
+	var preflight: Dictionary = preflight_transfer_batch(
+		{item_id: 1},
+		{}
+	)
+	if not preflight["ok"]:
+		return _deferred_rejected_result(item_id, "item_not_owned")
+
+	var request_generation := _deferred_generation
+	commit_transfer_batch({item_id: 1}, {})
+
+	_deferred_request_sequence += 1
+	var effect: Dictionary = validation["effect"].duplicate(true)
+	var entry: Dictionary = {
+		"run_generation": request_generation,
+		"request_id": _deferred_request_sequence,
+		"item_id": item_id,
+		"effect": effect,
+	}
+	_deferred_effect_queue.append(entry)
+
+	publish_transfer_batch(true)
+
+	if _deferred_generation != request_generation:
+		return _run_reset_deferred_result(item_id)
+
+	var accepted: Dictionary = {
+		"ok": true,
+		"error": "",
+		"item_id": item_id,
+		"consumed": true,
+		"queued": true,
+		"applied": false,
+		"request_id": _deferred_request_sequence,
+	}
+	var accepted_snapshot: Dictionary = accepted.duplicate(true)
+	_finish_item_use(item_id, accepted_snapshot)
+
+	if _deferred_generation != request_generation:
+		return _run_reset_deferred_result(item_id)
+
+	return accepted.duplicate(true)
+
+
+func flush_deferred_effects(user: Node) -> Dictionary:
+	if _deferred_flush_active:
+		return {
+			"ok": false,
+			"error": "flush_already_in_progress",
+			"applied": [],
+			"failed": [],
+			"remaining": _deferred_effect_queue.size(),
+		}
+
+	_deferred_flush_active = true
+	var flush_generation := _deferred_generation
+	var applied: Array = []
+	var failed: Array = []
+
+	while not _deferred_effect_queue.is_empty():
+		if _deferred_generation != flush_generation:
+			break
+
+		var entry: Dictionary = _deferred_effect_queue.front()
+		if entry["run_generation"] != flush_generation:
+			break
+
+		var result: Dictionary
+		if not is_instance_valid(user) or not (user is Player):
+			result = _failed_deferred_result(entry, "invalid_user")
+		else:
+			var player: Player = user
+			if player.get_current_hp() >= player.get_max_hp():
+				result = _failed_deferred_result(entry, "hp_full")
+			else:
+				var effect: Dictionary = entry["effect"]
+				var heal_result: Dictionary = player.heal(effect["value"])
+
+				if _deferred_generation != flush_generation:
+					break
+
+				if heal_result.get("ok", false):
+					result = _applied_deferred_result(entry)
+				else:
+					var heal_error := str(heal_result.get("error", "effect_failed"))
+					result = _failed_deferred_result(
+						entry,
+						"effect_failed" if heal_error != "hp_full" else "hp_full"
+					)
+
+		if not _remove_deferred_head(
+			flush_generation,
+			entry["request_id"]
+		):
+			break
+
+		var independent_result: Dictionary = result.duplicate(true)
+		if independent_result["ok"]:
+			applied.append(independent_result.duplicate(true))
+			var applied_payload: Dictionary = independent_result.duplicate(true)
+			applied_payload.make_read_only()
+			deferred_effect_applied.emit(
+				entry["request_id"],
+				entry["item_id"],
+				applied_payload
+			)
+		else:
+			failed.append(independent_result.duplicate(true))
+			var failed_payload: Dictionary = independent_result.duplicate(true)
+			failed_payload.make_read_only()
+			deferred_effect_failed.emit(
+				entry["request_id"],
+				entry["item_id"],
+				failed_payload
+			)
+
+		if _deferred_generation != flush_generation:
+			break
+
+	_deferred_flush_active = false
+
+	var run_reset_during_flush := _deferred_generation != flush_generation
+	return {
+		"ok": false if run_reset_during_flush or not failed.is_empty() else true,
+		"error": (
+			"run_reset"
+			if run_reset_during_flush
+			else "deferred_effect_failures" if not failed.is_empty()
+			else ""
+		),
+		"applied": applied,
+		"failed": failed,
+		"remaining": _deferred_effect_queue.size(),
+	}
+
+
+func get_deferred_effect_count() -> int:
+	return _deferred_effect_queue.size()
 
 
 func get_items() -> Array:
@@ -205,8 +383,115 @@ func upgrade_capacity() -> Dictionary:
 
 	_max_slots += _UPGRADE_AMOUNT
 	_capacity_upgrade_count += 1
+	_inventory_mutation_version += 1
 	_emit_inventory_changed()
 	return {"ok": true, "error": ""}
+
+
+func _validate_consumable_request(item_id: String, user: Node) -> Dictionary:
+	var lookup: Dictionary = _item_database.get_item_definition(item_id)
+	if not lookup["ok"]:
+		return {"ok": false, "error": "invalid_item", "effect": {}}
+
+	if not is_instance_valid(user) or not (user is Player):
+		return {"ok": false, "error": "invalid_user", "effect": {}}
+
+	if get_item_count(item_id) <= 0:
+		return {"ok": false, "error": "item_not_owned", "effect": {}}
+
+	var definition: ItemData = lookup["definition"]
+	if definition.item_type != "consumable" or definition.effects.size() != 1:
+		return {"ok": false, "error": "item_not_usable", "effect": {}}
+
+	var effect: Variant = definition.effects[0]
+	if not (effect is Dictionary):
+		return {"ok": false, "error": "item_not_usable", "effect": {}}
+
+	var healing_effect: Dictionary = effect
+	if not healing_effect.has("type") or healing_effect["type"] != "heal":
+		return {"ok": false, "error": "item_not_usable", "effect": {}}
+
+	for key in healing_effect:
+		if key != "type" and key != "value":
+			return {"ok": false, "error": "item_not_usable", "effect": {}}
+
+	if not healing_effect.has("value"):
+		return {"ok": false, "error": "effect_failed", "effect": {}}
+
+	var healing_value: Variant = healing_effect["value"]
+	if typeof(healing_value) != TYPE_INT or healing_value <= 0:
+		return {"ok": false, "error": "effect_failed", "effect": {}}
+
+	return {
+		"ok": true,
+		"error": "",
+		"effect": {
+			"type": "heal",
+			"value": healing_value,
+		},
+	}
+
+
+func _deferred_rejected_result(item_id: String, error: String) -> Dictionary:
+	var result := {
+		"ok": false,
+		"error": error,
+		"item_id": item_id,
+		"consumed": false,
+		"queued": false,
+		"applied": false,
+		"request_id": 0,
+	}
+	_finish_item_use(item_id, result)
+	return result.duplicate(true)
+
+
+func _run_reset_deferred_result(item_id: String) -> Dictionary:
+	return {
+		"ok": false,
+		"error": "run_reset",
+		"item_id": item_id,
+		"consumed": false,
+		"queued": false,
+		"applied": false,
+		"request_id": 0,
+	}
+
+
+func _remove_deferred_head(generation: int, request_id: int) -> bool:
+	if _deferred_effect_queue.is_empty():
+		return false
+
+	var entry: Dictionary = _deferred_effect_queue.front()
+	if entry["run_generation"] != generation:
+		return false
+	if entry["request_id"] != request_id:
+		return false
+
+	_deferred_effect_queue.remove_at(0)
+	return true
+
+
+func _applied_deferred_result(entry: Dictionary) -> Dictionary:
+	return {
+		"ok": true,
+		"error": "",
+		"request_id": entry["request_id"],
+		"item_id": entry["item_id"],
+		"consumed": true,
+		"applied": true,
+	}
+
+
+func _failed_deferred_result(entry: Dictionary, error: String) -> Dictionary:
+	return {
+		"ok": false,
+		"error": error,
+		"request_id": entry["request_id"],
+		"item_id": entry["item_id"],
+		"consumed": true,
+		"applied": false,
+	}
 
 
 func _slots_for_amount(amount: int, definition: ItemData) -> int:
@@ -291,13 +576,17 @@ func _emit_inventory_changed() -> void:
 
 
 func _finish_item_use(item_id: String, result: Dictionary) -> Dictionary:
-	var signal_result := result.duplicate()
+	var signal_result := result.duplicate(true)
 	signal_result.make_read_only()
 	item_used.emit(item_id, signal_result)
 	return result
 
 
 func _on_run_started(_seed: int, _dungeon: Dictionary) -> void:
+	_deferred_effect_queue.clear()
+	_deferred_generation += 1
+	_inventory_mutation_version += 1
+
 	var state_changed := (
 		not _item_counts.is_empty()
 		or _max_slots != _INITIAL_CAPACITY

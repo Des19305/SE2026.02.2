@@ -495,8 +495,14 @@ Attempts to use an item and returns:
 - `item_id: String`
 - `consumed: bool`
 
-An item must only be consumed after its use has been validated and its effect has been applied successfully.
-For healing Consumables, Inventory requests the effect through the Player's `heal(amount)` API and consumes the item only when that call succeeds. Inventory and Item Effect must not modify Player HP directly.
+Immediate healing use validates the item and full-HP state, commits consumption without publishing Inventory signals, requests the effect through the Player's `heal(amount)` API, then publishes the resulting Inventory state and `item_used` signal after the effect is processed.
+If healing fails and no public Inventory mutation occurred during the effect call, Inventory restores the consumed item internally without publishing `inventory_changed`. If a public Inventory mutation or Run reset occurred synchronously, Inventory does not overwrite callback-authoritative state.
+Inventory and Item Effect must not modify Player HP directly.
+
+While Inventory is paused, `queue_consumable_use(item_id: String, user: Node) -> Dictionary` consumes one eligible item and enqueues one immutable effect request. It rejects a full-HP healing request immediately without consuming or queueing.
+`flush_deferred_effects(user: Node) -> Dictionary` applies queued effects in FIFO order when Inventory resumes. Full-HP or other effect failures remove the failed entry exactly once and do not block later entries.
+`get_deferred_effect_count() -> int` reports the current queued-effect count.
+The queue is Run-scoped and is cleared when a successful Run start is announced by `run_started(seed, dungeon)`.
 
 Reset run-scoped inventory state only in response to `run_started(seed, dungeon)`, which is emitted after a new run has successfully started. Reset the item collection, capacity to 12 slots, and capacity-upgrade count to zero. A failed generation must not reset the current inventory. Replay starts a new run and does not restore the previous inventory.
 
@@ -504,8 +510,11 @@ Reset run-scoped inventory state only in response to `run_started(seed, dungeon)
 
 - `inventory_changed(items: Array)`, where `items` is the stable `get_items()` snapshot described above.
 - `item_used(item_id: String, result: Dictionary)`
+- `deferred_effect_applied(request_id: int, item_id: String, result: Dictionary)`
+- `deferred_effect_failed(request_id: int, item_id: String, result: Dictionary)`
 
 Emit `inventory_changed` after a successful inventory modification. Emit `item_used` after an item-use attempt has been processed.
+For accepted deferred requests, emit `inventory_changed` immediately after consumption and queue insertion, then emit `item_used` with `queued: true`. Deferred effect outcome signals are emitted when FIFO processing removes each entry, whether it succeeds or fails.
 
 ### 7.6. Equipment Manager API
 
