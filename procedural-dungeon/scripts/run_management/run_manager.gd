@@ -25,27 +25,27 @@ var current_run := {}
 var last_run := {}
 
 
-func start_new_run(seed: int, config: Dictionary) -> Dictionary:
+func start_new_run(run_seed: int, config: Dictionary) -> Dictionary:
 	if current_run.get("status", "") == "in_progress":
-		return _rejected(seed, "A run is already in progress")
-	var config_error := RunConfigValidator.validate(seed, config)
+		return _rejected(run_seed, "A run is already in progress")
+	var config_error := RunConfigValidator.validate(run_seed, config)
 	if config_error != "":
-		return _rejected(seed, config_error)
+		return _rejected(run_seed, config_error)
 
 	var run_config := _with_defaults(config)
-	var generated := _generate_valid_dungeon(seed, run_config)
+	var generated := _generate_valid_dungeon(run_seed, run_config)
 	if generated["error"] != "":
-		return _rejected(seed, generated["error"])
+		return _rejected(run_seed, generated["error"])
 
-	var record := _new_record(seed, run_config, clock.call())
+	var record := _new_record(run_seed, run_config, clock.call())
 	var save_error := _repository().save_new_run(record)
 	if save_error != "":
-		return _rejected(seed, save_error)
+		return _rejected(run_seed, save_error)
 
 	current_run = record
 	last_run = record
-	run_started.emit(seed, generated["dungeon"])
-	return {"ok": true, "error": "", "seed": seed, "dungeon": generated["dungeon"]}
+	run_started.emit(run_seed, generated["dungeon"])
+	return {"ok": true, "error": "", "seed": run_seed, "dungeon": generated["dungeon"]}
 
 
 ## Starts a fresh run with the previous run's seed and configuration.
@@ -84,8 +84,8 @@ func _with_defaults(config: Dictionary) -> Dictionary:
 
 
 ## Returns {"dungeon": Dictionary, "error": String}; error is empty on success.
-func _generate_valid_dungeon(seed: int, run_config: Dictionary) -> Dictionary:
-	var dungeon := DungeonGenerator.generate_dungeon(seed, run_config)
+func _generate_valid_dungeon(run_seed: int, run_config: Dictionary) -> Dictionary:
+	var dungeon := DungeonGenerator.generate_dungeon(run_seed, run_config)
 	if not dungeon["ok"]:
 		return {"dungeon": {}, "error": "Generation failed: %s" % dungeon["error_message"]}
 	var check := DungeonGenerator.validate_dungeon(dungeon, run_config)
@@ -94,10 +94,10 @@ func _generate_valid_dungeon(seed: int, run_config: Dictionary) -> Dictionary:
 	return {"dungeon": dungeon, "error": ""}
 
 
-func _new_record(seed: int, run_config: Dictionary, now: int) -> Dictionary:
+func _new_record(run_seed: int, run_config: Dictionary, now: int) -> Dictionary:
 	return {
-		"run_id": "%d_%d" % [now, seed],
-		"seed": seed,
+		"run_id": "%d_%d" % [now, run_seed],
+		"seed": run_seed,
 		"config": run_config,
 		"generation_version": GENERATION_VERSION,
 		"created_at": now,
@@ -112,5 +112,5 @@ func _repository() -> RunRecordRepository:
 	return RunRecordRepository.new(records_dir)
 
 
-func _rejected(seed: int, error: String) -> Dictionary:
-	return {"ok": false, "error": error, "seed": seed, "dungeon": {}}
+func _rejected(run_seed: int, error: String) -> Dictionary:
+	return {"ok": false, "error": error, "seed": run_seed, "dungeon": {}}

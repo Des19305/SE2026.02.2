@@ -1,4 +1,3 @@
-
 name: CI
 
 on:
@@ -23,6 +22,12 @@ jobs:
 
       - name: Show Godot version
         run: godot --version
+        working-directory: procedural-dungeon
 
       - name: Import and validate project
         run: godot --headless --editor --path . --quit
+        working-directory: procedural-dungeon
+
+      - name: Run automated test suite
+        run: godot --headless --path . -s res://tests/run_tests.gd
+        working-directory: procedural-dungeon

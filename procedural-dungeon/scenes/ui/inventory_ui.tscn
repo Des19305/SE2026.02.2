@@ -1,0 +1,96 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/inventory_ui.gd" id="1_inventory_ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_inventory"]
+bg_color = Color(0.08, 0.09, 0.12, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
+
+[node name="InventoryUI" type="Control" unique_id=1000001]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_inventory_ui")
+visible = false
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1000002]
+layout_mode = 1
+anchor_left = 0.22
+anchor_top = 0.06
+anchor_right = 0.78
+anchor_bottom = 1.0
+offset_bottom = -140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Background" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_inventory")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1000003]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1000004]
+layout_mode = 2
+text = "Inventory"
+
+[node name="CapacityLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1000005]
+layout_mode = 2
+text = "Capacity: 0 / 12"
+
+[node name="EmptyLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1000006]
+layout_mode = 2
+text = "Inventory is empty"
+visible = false
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer" unique_id=1000007]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" unique_id=1000008]
+layout_mode = 2
+columns = 4
+
+[node name="DetailsNameLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1000009]
+layout_mode = 2
+text = "No item selected"
+
+[node name="DetailsDescriptionLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1000010]
+layout_mode = 2
+text = ""
+
+[node name="DetailsQuantityLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1000011]
+layout_mode = 2
+text = ""
+
+[node name="Actions" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1000012]
+layout_mode = 2
+
+[node name="UseButton" type="Button" parent="MarginContainer/VBoxContainer/Actions" unique_id=1000013]
+layout_mode = 2
+text = "Use"
+
+[node name="RemoveButton" type="Button" parent="MarginContainer/VBoxContainer/Actions" unique_id=1000014]
+layout_mode = 2
+text = "Remove"
+
+[node name="AssignHotbarButton" type="Button" parent="MarginContainer/VBoxContainer/Actions" unique_id=1000015]
+layout_mode = 2
+text = "Assign to Selected Hotbar Slot"

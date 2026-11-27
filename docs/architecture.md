@@ -66,7 +66,9 @@ The game is organized into functional modules:
 - **Player:** Handles player movement, collision, and player-related state.
 - **Combat:** Handles attacks, damage, cooldowns, health changes, and combat outcomes.
 - **Enemies:** Implements enemy behavior, including three enemy types and one boss.
+- **Item Database:** Provides registered item definitions and metadata to gameplay modules and UI.
 - **Inventory:** Manages items and item usage.
+- **Equipment Manager:** Manages equipment state, slots, compatibility, and effect coordination.
 - **Run Management:** Manages the current run, seed, generation configuration, and replay.
 - **UI:** Displays the HUD, health, inventory, seed information, and win/loss screens.
 
@@ -104,6 +106,7 @@ Responsibilities:
 - Handle player movement and collision.
 - Maintain player-specific state.
 - Interact with enemies, combat, and inventory through defined interfaces.
+- Apply equipment effects to Player stats through an agreed interface; the Equipment Manager coordinates updates but does not directly modify Player stat internals.
 
 ### 4.4 Combat
 
@@ -133,8 +136,18 @@ Responsibilities:
 - Support adding, removing, and using items.
 - Validate item-use requests.
 - Provide inventory information to the UI.
+- Use Item Database definitions and metadata without duplicating them in inventory entries.
+- Coordinate item transfers with the Equipment Manager through public interfaces without owning equipment state.
 
-### 4.7 Run Management
+### 4.7 Item Database
+
+Responsibilities:
+
+- Own and provide registered Item Definitions and metadata to gameplay modules and UI through its interfaces.
+- Does not own Inventory quantities or Equipment state.
+- Does not perform Equipment validation or directly apply equipment effects.
+
+### 4.8 Run Management
 
 Responsibilities:
 
@@ -146,7 +159,7 @@ Responsibilities:
 
 For the MVP, replay means generating a new dungeon and starting a new run with the same seed and generation configuration. Restoring the complete combat and inventory state of a previous run is outside this definition unless it becomes an explicit requirement.
 
-### 4.8 UI
+### 4.9 UI
 
 Responsibilities:
 
@@ -157,6 +170,15 @@ Responsibilities:
 - Display win/loss states and other relevant feedback.
 
 The UI should use module interfaces rather than independently implementing gameplay rules.
+
+### 4.10 Equipment Manager
+
+Responsibilities:
+
+- Own and manage the player's equipment state, slot availability, and reservations.
+- Validate equipment operations using Item Database metadata.
+- Coordinate item transfers with Inventory through public interfaces and preserve atomic operation behavior.
+- Aggregate active equipment effects and coordinate updates with Player/Stat handling without directly modifying Player stat internals.
 
 ## 5. Dungeon Generation
 
@@ -348,14 +370,14 @@ Starts a fresh run using the previous run's seed and complete effective generati
 
 `end_run(won: bool, reason: String) -> Dictionary`
 
-Marks the current run as completed. Returns a result containing `ok: bool` and `error: String`. If the completed run cannot be saved, `ok` is false, `error` describes the persistence failure, and the run remains in progress.
+Marks the current run as completed. Returns `ok: bool` and `error: String`. If the completed run cannot be saved, `ok` is false, `error` describes the persistence failure, and the run remains in progress.
 
 #### Signals
 
 - `run_started(seed: int, dungeon: Dictionary)`
 - `run_ended(won: bool, reason: String)`
 
-Emit `run_started` only after a valid dungeon has been generated and the run has been initialized. Emit `run_ended` when the run finishes.
+Emit `run_started` only after a valid dungeon has been generated and the run has been initialized. Emit `run_ended` only after the completed run record is saved successfully.
 
 ### 7.4. Combat, Player, and Enemy APIs
 
@@ -386,6 +408,21 @@ Implemented by damage-receiving entities. Applies damage and returns:
 
 Health must not fall below zero.
 
+Player healing API:
+
+`heal(amount: int) -> Dictionary`
+
+Player is the sole owner of its HP state and HP mutation logic. Other modules, including Inventory and Item Effect, must not modify Player HP directly; healing Consumables must request healing through this API.
+
+The amount must be a positive integer. An invalid amount fails without changing HP and returns `ok: false` with a non-empty descriptive `error` string; no new error code is defined for this case. If healing does not increase Current HP, including when it is already at `max_hp`, the operation fails with `ok: false` and a non-empty descriptive `error` string; no error code is defined here. Otherwise, healing succeeds with `ok: true` and an empty `error`. The amount applied is clamped so Current HP does not exceed `max_hp`; an amount greater than the missing HP still succeeds if it increases Current HP.
+
+The result uses the shared `Dictionary` convention with `ok: bool` and `error: String`.
+
+Player HP getters:
+
+- `get_current_hp() -> int`
+- `get_max_hp() -> int`
+
 #### Signals
 
 Entity signals:
@@ -393,11 +430,17 @@ Entity signals:
 - `health_changed(current_hp: int, max_hp: int)`
 - `died(source: Node)`
 
+Player signal:
+
+- `max_hp_changed(max_hp: int)`
+
 Combat signal:
 
 - `attack_resolved(attacker: Node, target: Node, damage: int)`
 
-Entities emit `health_changed` when their health changes and `died` once when they transition from alive to defeated. Combat emits `attack_resolved` after a successful attack. The entity's `died` signal is the authoritative notification that it has been defeated; Combat must not emit a duplicate death event.
+An entity emits `health_changed(current_hp, max_hp)` only when its current HP actually changes. The emitted values reflect the updated state. No signal is emitted when an operation fails or leaves current HP unchanged. Entities emit `died` once when they transition from alive to defeated. Combat emits `attack_resolved` after a successful attack. The entity's `died` signal is the authoritative notification that it has been defeated; Combat must not emit a duplicate death event.
+
+The Player emits `max_hp_changed(max_hp)` only when its Max HP changes. If an operation changes both Max HP and Current HP, the Player emits both `max_hp_changed` and `health_changed`; a Max HP change alone does not emit `health_changed`.
 
 Cooldowns, attack range, and damage calculation must follow the gameplay rules agreed by the team.
 
@@ -405,7 +448,7 @@ Cooldowns, attack range, and damage calculation must follow the gameplay rules a
 
 **Module:** `scripts/inventory/`
 
-**Responsibility:** Manage item quantities and item-use rules.
+**Responsibility:** Manage item IDs and quantities, inventory capacity, and item-use rules. Item metadata is provided by the Item Database and is not duplicated in inventory entries. The Equipment Manager must use Inventory's public API for item transfers and must not directly modify Inventory state.
 
 Items are identified by stable string IDs.
 
@@ -419,6 +462,30 @@ Adds the specified quantity of an item. Returns `false` if the operation cannot 
 
 Removes the specified quantity. If the item or quantity is invalid or insufficient, the operation must fail without changing the inventory.
 
+`get_items() -> Array`
+
+Returns the inventory snapshot as entries with exactly this structure:
+
+`{ "item_id": String, "amount": int }`
+
+The order of entries must be stable. Entries contain no Item Definition metadata; callers retrieve metadata from the Item Database.
+
+`get_item_count(item_id: String) -> int`
+
+Returns the total quantity of the specified item.
+
+`get_max_slots() -> int`
+
+Returns the current inventory capacity.
+
+`get_used_slots() -> int`
+
+Returns the number of occupied inventory slots.
+
+`upgrade_capacity() -> Dictionary`
+
+Increases capacity from 12 to 14 slots, then to a maximum of 16 slots. A run allows at most two successful upgrades. The result uses `ok: bool` and `error: String`; a failed upgrade must not change capacity or the upgrade count. No additional error codes are defined here.
+
 `use_item(item_id: String, user: Node) -> Dictionary`
 
 Attempts to use an item and returns:
@@ -428,16 +495,136 @@ Attempts to use an item and returns:
 - `item_id: String`
 - `consumed: bool`
 
-An item must only be consumed after its use has been validated and its effect has been applied successfully.
+Immediate healing use validates the item and full-HP state, commits consumption without publishing Inventory signals, requests the effect through the Player's `heal(amount)` API, then publishes the resulting Inventory state and `item_used` signal after the effect is processed.
+If healing fails and no public Inventory mutation occurred during the effect call, Inventory restores the consumed item internally without publishing `inventory_changed`. If a public Inventory mutation or Run reset occurred synchronously, Inventory does not overwrite callback-authoritative state.
+Inventory and Item Effect must not modify Player HP directly.
+
+While Inventory is paused, `queue_consumable_use(item_id: String, user: Node) -> Dictionary` consumes one eligible item and enqueues one immutable effect request. It rejects a full-HP healing request immediately without consuming or queueing.
+`flush_deferred_effects(user: Node) -> Dictionary` applies queued effects in FIFO order when Inventory resumes. Full-HP or other effect failures remove the failed entry exactly once and do not block later entries.
+`get_deferred_effect_count() -> int` reports the current queued-effect count.
+The queue is Run-scoped and is cleared when a successful Run start is announced by `run_started(seed, dungeon)`.
+
+Reset run-scoped inventory state only in response to `run_started(seed, dungeon)`, which is emitted after a new run has successfully started. Reset the item collection, capacity to 12 slots, and capacity-upgrade count to zero. A failed generation must not reset the current inventory. Replay starts a new run and does not restore the previous inventory.
 
 #### Signals
 
-- `inventory_changed(items: Array)`
+- `inventory_changed(items: Array)`, where `items` is the stable `get_items()` snapshot described above.
 - `item_used(item_id: String, result: Dictionary)`
+- `deferred_effect_applied(request_id: int, item_id: String, result: Dictionary)`
+- `deferred_effect_failed(request_id: int, item_id: String, result: Dictionary)`
 
 Emit `inventory_changed` after a successful inventory modification. Emit `item_used` after an item-use attempt has been processed.
+For accepted deferred requests, emit `inventory_changed` immediately after consumption and queue insertion, then emit `item_used` with `queued: true`. Deferred effect outcome signals are emitted when FIFO processing removes each entry, whether it succeeds or fails.
 
-### 7.6. UI and Main Game Integration
+### 7.6. Equipment Manager API
+
+**Module:** `scripts/inventory/`
+
+**Responsibilities:** The Equipment Manager owns equipment state, slot availability and reservations, and equipment validation. The Item Database provides Item Definitions and metadata but does not decide or perform equipment operations. Inventory owns item quantities; the Equipment Manager must coordinate transfers through Inventory's public API rather than accessing or modifying Inventory state directly.
+
+#### Item Definition metadata
+
+Item Definitions distinguish `item_type` from `tags`. `item_type` is the primary item classification, with examples including `equipment`, `consumable`, `quest`, and `material`. Tags support flexible filtering and do not replace metadata required for equipment logic. Equipment compatibility metadata includes:
+
+- `allowed_slot_types`: slot types the item may use.
+- `slots_required`: number of equipment slots the item occupies.
+
+Do not use `is_two_handed`; `slots_required` defines the number of slots an item needs. The Item Database provides metadata only and does not validate compatibility or calculate or apply effects.
+
+Item Definitions may also contain an `effects` collection. The documented basic effect fields are `type`, `stat`, `operation`, and `value`; additional fields such as `hp_behavior` may be used when required. The exact effect schema and value vocabulary remain unresolved.
+
+The relationship between the existing `category` field and `item_type` is not defined by this contract.
+
+#### Equipment slots
+
+The Equipment Manager owns the player's equipment slots and their availability and reservation state. The initial slots are:
+
+| Slot ID | Slot type |
+|---|---|
+| `weapon_1` | `weapon` |
+| `weapon_2` | `weapon` |
+| `helmet` | `helmet` |
+| `armor` | `armor` |
+| `boots` | `boots` |
+| `accessory_1` | `accessory` |
+| `accessory_2` | `accessory` |
+
+Additional slots may be added during a run through gameplay effects, buffs, items, or future mechanisms. Each slot has a unique `slot_id` and a `slot_type`; a newly added slot is available and empty and must not change existing equipment. The MVP does not support removing slots. The Equipment Manager identifies compatible slots based on `allowed_slot_types` and `slots_required`, and reserves occupied slots so they cannot be used by another item.
+
+The API for adding slots and the public API for retrieving slot definitions are not defined here.
+
+#### Public functions
+
+`equip_item(item_id: String, slot: String) -> Dictionary`
+
+`unequip_item(slot: String) -> Dictionary`
+
+`get_equipment() -> Dictionary`
+
+Equip and unequip results use the shared `ok: bool` and `error: String` convention. No Equipment-specific error-code list is defined here. The exact `get_equipment()` snapshot structure is not defined; callers must not assume particular fields.
+
+The Equipment Manager validates that the item exists, can be equipped, and is compatible with an available slot or set of slots. Validation uses Item Database metadata and current equipment and reservation state.
+
+Equip, unequip, replace, and their Inventory transfers must be atomic. If an operation fails, Inventory and Equipment must remain in their pre-operation states; no item may be lost or left in a partially changed state. A replaced item must be returned to Inventory as part of a successful operation. If a safe transfer or replacement cannot be completed, the operation fails without partial mutation. The modules must use their public interfaces; no transaction API or direct internal-state access is defined by this contract.
+
+Player owns an explicit Combat-state contract: `start_combat()`, `end_combat()`, `is_in_combat()`, and `combat_state_changed(is_in_combat: bool)`. Future Combat gameplay must control it explicitly. EquipmentManager enforces an `in_combat` failure in `equip_item()` and `unequip_item()`, covering replacement, Accessories, dynamic slots, and same-item equip calls. Combat detection and encounter lifecycle are not implemented by EquipmentManager.
+
+#### Signals
+
+- `equipment_changed`
+- `equipment_slots_changed`
+
+Both signals have no payload. Emit `equipment_changed` only after a successful operation actually changes equipment state. Emit `equipment_slots_changed` only when the slot list actually changes. Do not emit either signal after a failed operation or when its corresponding state remains unchanged. If both states change, both signals may be emitted after the complete state update.
+
+#### Equipment effects and Player integration
+
+The Equipment Manager aggregates effects from active equipment and coordinates their updates when equipment changes. Effects must reflect the current equipment state without being applied repeatedly or left stale. Player/Stat handling owns applying effects to Player stats; the Equipment Manager must not directly modify Player stat internals. The integration method and signature are unresolved.
+
+Max HP effects use the following behaviors:
+
+- `increase_max_only` increases Max HP without changing Current HP.
+- `increase_max_and_current` increases Max HP and Current HP by the same amount.
+
+When removing effects decreases Max HP, Current HP must not be increased automatically and must be clamped if it exceeds the new Max HP. Emit `max_hp_changed(max_hp)` when Max HP changes. Emit `health_changed(current_hp, max_hp)` only if Current HP also changes, including when clamping lowers it.
+
+#### Unresolved contract details
+
+- `get_equipment()` snapshot fields.
+- Public APIs for retrieving slot definitions and adding dynamic slots.
+- The Player/Stat effect integration method and signature.
+- Exact effect-schema details and value vocabulary.
+- The relationship between `category` and `item_type`.
+- Any transaction API or implementation mechanism for atomic cross-module transfers.
+
+#### Scope Boundaries
+
+The shared contracts in this section define APIs, metadata, module ownership, validation, state management, and integration boundaries.
+
+The following are outside the scope of Issue #5 shared contract updates:
+
+- Shield blocking mechanics.
+- Bow charging and shooting mechanics.
+- Combat implementation or dual-wield mechanics.
+- Damage formulas, stat scaling, or combat balance.
+- A complete item catalog.
+- Target-dependent Key or Quest item behavior.
+- An exact `get_equipment()` snapshot structure that has not been agreed upon.
+
+These behaviors require a separate agreed contract or scope before implementation.
+
+#### Implementation/Testing Implications
+
+Implementations based on these contracts must verify that:
+
+- Equipment state and slot reservations remain valid.
+- Equip, unequip, and replace operations are atomic and do not lose items.
+- Item types, slot requirements, and compatibility are validated using metadata.
+- Equipment effects stay synchronized without repeated application or stale effects.
+- Equipment signals emit only when the corresponding state actually changes.
+- Max HP and Current HP signals follow their defined emission conditions.
+- Adding dynamic slots does not affect existing equipment.
+
+### 7.7. UI and Main Game Integration
 
 **Modules:** `scenes/ui/` and `scenes/main/`
 
@@ -449,6 +636,7 @@ The UI must support the following interactions:
 
 - Display the current seed, player health, inventory, and run status.
 - Request item use through the Inventory API.
+- Request equip and unequip operations through the Equipment API.
 - Request replay through Run Management.
 - Display generation errors, victory, and defeat.
 
@@ -457,18 +645,23 @@ The main game flow is:
 1. Request a new run through Run Management.
 2. Check the returned result and stop initialization if it failed.
 3. Use valid dungeon data to construct the dungeon scene and place the player and boss.
-4. Connect the required entity, inventory, and run signals.
+4. Connect the required entity, inventory, equipment, and run signals.
 5. Forward relevant outcomes to Run Management and UI.
 6. Initialize a fresh run when replay is requested.
 
-The UI must not implement generation, combat, or inventory rules itself.
+Equipment signals have no payload. Consumers may request equipment state through `get_equipment()`; its snapshot structure and the public API for retrieving slot definitions remain unresolved. The UI must not implement generation, combat, inventory, or equipment rules itself.
 
-### 7.7. API Verification and Change Control
+### 7.8. API Verification and Change Control
 
 Before merging module implementations, the team should verify that:
 
 - Function signatures, return structures, and signal definitions match this section.
 - Failure cases are handled without unintended state changes.
+- Equipment compatibility uses Item Database metadata and slot reservations.
+- Equip, unequip, replace, and Inventory transfers are atomic and do not lose items.
+- Equipment signals emit only after their corresponding state actually changes and have no payload.
+- Equipment effects remain synchronized with equipment state without direct mutation of Player stat internals.
+- `max_hp_changed` emits only when Max HP changes; `health_changed` emits only when Current HP changes.
 - Dungeon generation is deterministic for the same seed and configuration.
 - Integration tests cover interactions between the major modules.
 

@@ -34,6 +34,10 @@ func _has_property(object: Object, property_name: String) -> bool:
 
 
 func _init() -> void:
+        call_deferred("_run_tests")
+
+
+func _run_tests() -> void:
         var collector := ErrorCollector.new()
         OS.add_logger(collector)
 
@@ -79,7 +83,7 @@ func _init() -> void:
                         if suite.has_method("before_each"):
                                 suite.call("before_each")
 
-                        test_result = suite.call(test_name)
+                        test_result = await suite.call(test_name)
 
                         if suite.has_method("after_each"):
                                 suite.call("after_each")

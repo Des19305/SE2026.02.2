@@ -10,8 +10,8 @@ const MIN_ROOM_SIZE := 3
 
 
 ## Returns an empty string when the input is valid, otherwise the first error.
-static func validate(seed: int, config: Dictionary) -> String:
-	if seed < 0:
+static func validate(run_seed: int, config: Dictionary) -> String:
+	if run_seed < 0:
 		return "Seed must be non-negative"
 	for key in REQUIRED_KEYS:
 		if not config.has(key):
