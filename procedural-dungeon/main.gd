@@ -34,6 +34,9 @@ var ui_layer: CanvasLayer
 ## temporary folder); _ready() passes it to RunManager before the first run.
 var records_dir := "user://runs"
 
+## Screen height kept free for the hotbar at the bottom (see hotbar_ui.tscn).
+const HOTBAR_RESERVED_HEIGHT := 115.0
+
 const STARTUP_RUN_CONFIG := {
 	"width": 50,
 	"height": 50,
@@ -134,8 +137,11 @@ func _frame_camera(grid: DungeonGrid) -> void:
 	var dungeon_height: float = grid.height * DungeonGrid.CELL_SIZE
 	var viewport_size: Vector2 = get_viewport().get_visible_rect().size
 	var padding := 1.10
+	# The hotbar covers the bottom of the screen. The camera stays centred on the
+	# dungeon, so the same band is kept free at the top and the bottom.
+	var usable_height := maxf(viewport_size.y - 2.0 * HOTBAR_RESERVED_HEIGHT, 1.0)
 	var scale_x := viewport_size.x / (dungeon_width * padding)
-	var scale_y := viewport_size.y / (dungeon_height * padding)
+	var scale_y := usable_height / (dungeon_height * padding)
 	var zoom_scale := minf(scale_x, scale_y)
 	zoom_scale = maxf(zoom_scale, 0.01)
 
