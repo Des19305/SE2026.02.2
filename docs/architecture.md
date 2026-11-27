@@ -346,9 +346,9 @@ Requests dungeon generation and validation. Returns a result containing `ok: boo
 
 Starts a fresh run using the previous run's seed and complete effective generation configuration. Replay regenerates the dungeon but does not restore previous health, inventory, enemy states, or combat progress.
 
-`end_run(won: bool, reason: String) -> void`
+`end_run(won: bool, reason: String) -> Dictionary`
 
-Marks the current run as completed.
+Marks the current run as completed. Returns a result containing `ok: bool` and `error: String`. If the completed run cannot be saved, `ok` is false, `error` describes the persistence failure, and the run remains in progress.
 
 #### Signals
 
