@@ -30,6 +30,9 @@ var dungeon_camera: Camera2D
 var inventory_ui
 var hotbar_ui
 var ui_layer: CanvasLayer
+## Folder for run records. Set it before the node enters the tree (tests use a
+## temporary folder); _ready() passes it to RunManager before the first run.
+var records_dir := "user://runs"
 
 const STARTUP_RUN_CONFIG := {
 	"width": 50,
@@ -43,6 +46,7 @@ const STARTUP_RUN_CONFIG := {
 
 func _ready() -> void:
 	run_manager = RunManagerScript.new()
+	run_manager.records_dir = records_dir
 	add_child(run_manager)
 
 	item_database = ItemDatabaseScript.new()
@@ -88,6 +92,9 @@ func _ready() -> void:
 	start_run(42, STARTUP_RUN_CONFIG)
 
 
+## Opens the Inventory with E while the game runs. InventoryUI only processes
+## input while the tree is paused (PROCESS_MODE_WHEN_PAUSED), so it handles the
+## closing E itself and this handler handles the opening one.
 func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey):
 		return

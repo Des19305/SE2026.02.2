@@ -343,12 +343,13 @@ func _create_fixture() -> Dictionary:
 			"records_dir": "",
 		}
 	var main: Main = main_node as Main
+	# Set the records folder before _ready() starts the first run, so the run
+	# and its record live in the same folder (and no file goes to user://runs).
+	var records_dir := "user://test_phase75_rendering/%d" % Time.get_ticks_usec()
+	main.records_dir = records_dir
 	tree.root.add_child(main)
 	await tree.process_frame
 	await tree.process_frame
-	var records_dir := "user://test_phase75_rendering/%d" % Time.get_ticks_usec()
-	if main.run_manager != null:
-		main.run_manager.records_dir = records_dir
 	return {
 		"main": main,
 		"records_dir": records_dir,
